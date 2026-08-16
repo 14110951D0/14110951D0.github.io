@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yanke Li</title>
+<meta name="description" content="Yanke Li — machine learning researcher working on explainable clinical AI. PhD, ETH Zürich; incoming Postdoctoral Researcher in AI for Robust Clinical Prediction Modelling, University of Oxford.">
+<meta property="og:title" content="Yanke Li">
+<meta property="og:description" content="Explainable digital twins for clinical decision support — causal structure learning, interpretable temporal models, and known-truth evaluation.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='28' cy='30' r='12' fill='%23082c54'/%3E%3Ccircle cx='72' cy='42' r='12' fill='%230e7490'/%3E%3Ccircle cx='40' cy='76' r='12' fill='%23082c54'/%3E%3Cpath d='M38 34 62 40M34 42 38 64M62 50 48 68' stroke='%23082c54' stroke-width='6' fill='none'/%3E%3C/svg%3E">
+<style>
+/* ---------- Fonts (embedded, latin subset) ---------- */
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url(data:font/woff2;base64,{{FONT_NORMAL}}) format('woff2');
+}
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: italic;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url(data:font/woff2;base64,{{FONT_ITALIC}}) format('woff2');
+}
+
+/* ---------- Design tokens ---------- */
+:root {
+  --paper: #F7F8FA;
+  --card: #FFFFFF;
+  --ink: #1B2534;
+  --muted: #55647A;
+  --faint: #5F6E85;
+  --line: #DFE4EC;
+  --oxford: #082C54;
+  --accent: #0E7490;
+  --accent-strong: #0A5A70;
+  --gold: #A8842F;
+  --chip-bg: #EDF1F7;
+  --chip-ink: #33445C;
+  --wash: #EEF2F7;
+  --shadow: 0 1px 2px rgba(8, 44, 84, 0.05), 0 8px 24px -12px rgba(8, 44, 84, 0.12);
+  --serif: 'Source Serif 4', 'Sitka Text', Cambria, Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0D1521;
+    --card: #141F2E;
+    --ink: #E4EAF3;
+    --muted: #9AA9BE;
+    --faint: #78899F;
+    --line: #273549;
+    --oxford: #BCD0EC;
+    --accent: #45B9CC;
+    --accent-strong: #7DD3E0;
+    --gold: #D3AC58;
+    --chip-bg: #1D2A3D;
+    --chip-ink: #B9C6D9;
+    --wash: #111C2B;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0D1521;
+  --card: #141F2E;
+  --ink: #E4EAF3;
+  --muted: #9AA9BE;
+  --faint: #78899F;
+  --line: #273549;
+  --oxford: #BCD0EC;
+  --accent: #45B9CC;
+  --accent-strong: #7DD3E0;
+  --gold: #D3AC58;
+  --chip-bg: #1D2A3D;
+  --chip-ink: #B9C6D9;
+  --wash: #111C2B;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* ---------- Base ---------- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.04rem;
+  line-height: 1.68;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-strong); text-decoration: underline; text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+b, strong { font-weight: 600; }
+.wrap { max-width: 920px; margin: 0 auto; padding: 0 clamp(1.25rem, 5vw, 2.5rem); }
+
+/* ---------- Nav ---------- */
+header.site {
+  position: sticky; top: 0; z-index: 20;
+  background: var(--paper);
+  background: color-mix(in srgb, var(--paper) 86%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.nav {
+  display: flex; align-items: center; gap: 1.5rem;
+  height: 3.4rem;
+  font-family: var(--sans); font-size: 0.86rem;
+}
+.nav .wordmark {
+  font-family: var(--serif); font-weight: 600; font-size: 1.05rem;
+  color: var(--oxford); letter-spacing: 0.01em; white-space: nowrap;
+}
+.nav .wordmark:hover { text-decoration: none; }
+.nav ul {
+  display: flex; gap: 1.15rem; list-style: none;
+  margin-left: auto; overflow-x: auto; scrollbar-width: none;
+}
+.nav ul::-webkit-scrollbar { display: none; }
+.nav ul a { color: var(--muted); white-space: nowrap; }
+.nav ul a:hover { color: var(--accent-strong); text-decoration: none; }
+.nav .cv-btn {
+  flex-shrink: 0;
+  font-weight: 600; color: var(--oxford);
+  border: 1px solid color-mix(in srgb, var(--oxford) 35%, transparent);
+  padding: 0.32rem 0.85rem; border-radius: 999px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.nav .cv-btn:hover { background: var(--oxford); color: var(--paper); text-decoration: none; }
+
+/* ---------- Hero ---------- */
+.hero { padding: clamp(2.8rem, 7vw, 5rem) 0 clamp(2.4rem, 5vw, 3.6rem); }
+.hero-grid {
+  display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(200px, 1fr);
+  gap: clamp(2rem, 5vw, 3.5rem); align-items: start;
+}
+.eyebrow {
+  font-family: var(--sans); font-size: 0.74rem; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent);
+  display: inline-flex; align-items: center; gap: 0.55rem;
+}
+.eyebrow svg { flex-shrink: 0; }
+h1.name {
+  font-size: clamp(2.5rem, 6.5vw, 3.7rem); font-weight: 600;
+  line-height: 1.08; letter-spacing: -0.015em; color: var(--oxford);
+  margin: 0.7rem 0 0.35rem; text-wrap: balance;
+}
+.name-cn {
+  font-family: var(--sans);
+  font-size: 1.05rem; color: var(--faint); font-weight: 400;
+  letter-spacing: 0.35em; margin-bottom: 1.3rem;
+}
+.role { margin-bottom: 1.5rem; display: grid; gap: 0.45rem; }
+.role p { line-height: 1.45; }
+.role .now { font-size: 1.06rem; color: var(--ink); }
+.role .now b { color: var(--oxford); }
+.role .prev { font-size: 0.98rem; color: var(--muted); }
+.hero-bio { max-width: 62ch; }
+.hero-bio p + p { margin-top: 0.8rem; }
+.hero-links {
+  display: flex; flex-wrap: wrap; gap: 0.6rem;
+  margin-top: 1.7rem; font-family: var(--sans); font-size: 0.86rem;
+}
+.hero-links a {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  padding: 0.42rem 0.95rem; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--card);
+  color: var(--ink); font-weight: 500;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.hero-links a:hover { border-color: var(--accent); text-decoration: none; transform: translateY(-1px); }
+.hero-links a.primary { background: var(--oxford); border-color: var(--oxford); color: var(--paper); }
+.hero-links a.primary:hover { border-color: var(--oxford); }
+.hero-links svg { color: var(--accent); }
+.hero-links a.primary svg { color: currentColor; opacity: 0.75; }
+
+.portrait { position: relative; }
+.portrait img {
+  width: 100%; max-width: 320px; display: block;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+}
+.portrait .graph-motif {
+  position: absolute; top: -34px; right: -20px; z-index: -1;
+  color: var(--accent); opacity: 0.5;
+}
+figcaption.loc {
+  font-family: var(--sans); font-size: 0.78rem; color: var(--faint);
+  margin-top: 0.7rem; display: flex; align-items: center; gap: 0.4rem;
+}
+
+/* ---------- Sections ---------- */
+section.block { padding: clamp(2.2rem, 5vw, 3.4rem) 0; border-top: 1px solid var(--line); scroll-margin-top: 4.2rem; }
+.section-head { margin-bottom: 1.6rem; }
+.section-head h2 {
+  font-size: clamp(1.45rem, 3vw, 1.75rem); font-weight: 600;
+  color: var(--oxford); letter-spacing: -0.01em; margin-top: 0.45rem;
+  text-wrap: balance;
+}
+.section-intro { max-width: 66ch; color: var(--muted); margin-top: 0.6rem; }
+
+/* ---------- News ---------- */
+.news { list-style: none; display: grid; gap: 0.85rem; max-width: 74ch; }
+.news li {
+  display: grid; grid-template-columns: 6.2rem 1fr; gap: 1.1rem;
+  align-items: baseline;
+}
+.news .date {
+  font-family: var(--sans); font-size: 0.78rem; font-weight: 600;
+  color: var(--faint); letter-spacing: 0.06em; text-transform: uppercase;
+  white-space: nowrap;
+}
+.news p { font-size: 0.99rem; line-height: 1.55; }
+
+/* ---------- Research ---------- */
+.thesis-quote {
+  border-left: 3px solid var(--accent);
+  padding: 0.25rem 0 0.25rem 1.25rem;
+  margin: 1.4rem 0 2rem; max-width: 64ch;
+  font-style: italic; font-size: 1.08rem; color: var(--ink);
+}
+.thesis-quote cite {
+  display: block; margin-top: 0.5rem;
+  font-style: normal; font-family: var(--sans); font-size: 0.8rem; color: var(--faint);
+}
+.themes { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+.theme {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 1.35rem 1.45rem 1.3rem;
+  display: flex; flex-direction: column; gap: 0.6rem;
+  box-shadow: var(--shadow);
+}
+.theme h3 { font-size: 1.12rem; font-weight: 600; color: var(--oxford); line-height: 1.35; text-wrap: balance; }
+.theme p { font-size: 0.94rem; line-height: 1.6; color: var(--muted); }
+.theme .outputs {
+  margin-top: auto; padding-top: 0.65rem;
+  display: flex; flex-wrap: wrap; gap: 0.4rem;
+}
+.chip {
+  font-family: var(--sans); font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.03em;
+  background: var(--chip-bg); color: var(--chip-ink);
+  padding: 0.22rem 0.6rem; border-radius: 999px; white-space: nowrap;
+}
+
+/* ---------- Publications ---------- */
+.pub-group { margin-top: 1.9rem; }
+.section-head + .pub-group { margin-top: 0; }
+.pub-group h3 {
+  font-family: var(--sans); font-size: 0.76rem; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint);
+  margin-bottom: 0.9rem;
+  display: flex; align-items: center; gap: 0.8rem;
+}
+.pub-group h3::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.pubs { list-style: none; display: grid; gap: 1.05rem; }
+.pub {
+  display: grid; grid-template-columns: 1fr auto; gap: 0.35rem 1.4rem;
+  align-items: baseline;
+}
+.pub-title { font-weight: 600; color: var(--ink); line-height: 1.45; font-size: 1rem; }
+.pub-authors {
+  grid-column: 1; font-size: 0.9rem; color: var(--muted); line-height: 1.5;
+}
+.pub-authors b { color: var(--ink); font-weight: 600; }
+.pub .chip { grid-row: 1; grid-column: 2; justify-self: end; }
+.pub-note { margin-top: 1.4rem; font-family: var(--sans); font-size: 0.8rem; color: var(--faint); }
+
+/* ---------- Talks ---------- */
+.talks { list-style: none; display: grid; gap: 1rem; max-width: 76ch; }
+.talks li { display: grid; grid-template-columns: 6.2rem 1fr; gap: 1.1rem; align-items: baseline; }
+.talks .date {
+  font-family: var(--sans); font-size: 0.78rem; font-weight: 600;
+  color: var(--faint); letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap;
+}
+.talks .what { font-size: 0.99rem; line-height: 1.5; }
+.talks .what b { color: var(--oxford); }
+.talks .where { display: block; font-size: 0.88rem; color: var(--muted); margin-top: 0.12rem; }
+
+/* ---------- Teaching / two-column ---------- */
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 2.4rem; }
+.split h3 { font-size: 1.08rem; font-weight: 600; color: var(--oxford); margin-bottom: 0.7rem; }
+.split ul { list-style: none; display: grid; gap: 0.5rem; font-size: 0.95rem; }
+.split li { display: grid; grid-template-columns: 3.4rem 1fr; gap: 0.8rem; align-items: baseline; }
+.split li .yr { font-family: var(--sans); font-size: 0.78rem; font-weight: 600; color: var(--faint); }
+.split li > span:not(.yr) { color: var(--ink); }
+.split li .detail { color: var(--muted); }
+.split p.plain { font-size: 0.95rem; color: var(--ink); }
+.split p.plain + p.plain { margin-top: 0.4rem; }
+.split .subhead {
+  font-family: var(--sans); font-size: 0.76rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint);
+  margin: 1.5rem 0 0.6rem;
+}
+.split .subhead:first-child { margin-top: 0; }
+
+/* ---------- Awards ---------- */
+.awards { list-style: none; display: grid; gap: 0.7rem; max-width: 74ch; }
+.awards li { display: grid; grid-template-columns: 6.2rem 1fr; gap: 1.1rem; align-items: baseline; }
+.awards .date {
+  font-family: var(--sans); font-size: 0.78rem; font-weight: 600;
+  color: var(--faint); letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap;
+}
+.awards p { font-size: 0.97rem; line-height: 1.5; }
+.awards p .detail { color: var(--muted); font-size: 0.9rem; }
+.award-mark { color: var(--gold); margin-right: 0.35rem; }
+
+/* ---------- Footer ---------- */
+footer.site {
+  border-top: 1px solid var(--line);
+  padding: 2.6rem 0 3rem;
+  background: var(--wash);
+}
+.foot-grid { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-between; align-items: flex-start; }
+.foot-contact h2 { font-size: 1.3rem; font-weight: 600; color: var(--oxford); margin-bottom: 0.5rem; }
+.foot-contact p { font-size: 0.96rem; color: var(--muted); max-width: 46ch; }
+.foot-contact .mail {
+  display: inline-block; margin-top: 0.8rem;
+  font-size: 1.02rem; font-weight: 600;
+}
+.foot-links { display: grid; gap: 0.4rem; font-family: var(--sans); font-size: 0.88rem; }
+.foot-links a { color: var(--muted); }
+.foot-links a:hover { color: var(--accent-strong); }
+.colophon {
+  margin-top: 2.2rem; padding-top: 1.2rem; border-top: 1px solid var(--line);
+  font-family: var(--sans); font-size: 0.78rem; color: var(--faint);
+  display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; justify-content: space-between;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 720px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .portrait { order: -1; }
+  .portrait img { max-width: 200px; }
+  .portrait .graph-motif { right: auto; left: 150px; top: -20px; }
+  .themes { grid-template-columns: 1fr; }
+  .split { grid-template-columns: 1fr; }
+  .pub { grid-template-columns: 1fr; }
+  .pub .chip { grid-row: auto; grid-column: 1; justify-self: start; margin-top: 0.15rem; }
+  .news li, .talks li, .awards li { grid-template-columns: 4.6rem 1fr; gap: 0.8rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <nav class="nav" aria-label="Site">
+      <a class="wordmark" href="#top">Yanke Li</a>
+      <ul>
+        <li><a href="#news">News</a></li>
+        <li><a href="#research">Research</a></li>
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="#talks">Talks</a></li>
+        <li><a href="#teaching">Teaching</a></li>
+        <li><a href="#awards">Awards</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a class="cv-btn" href="YankeLi_CV.pdf">CV</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ================= Hero ================= -->
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <span class="eyebrow">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><circle cx="3.2" cy="3.2" r="2.1" fill="currentColor"/><circle cx="11.8" cy="6" r="2.1" fill="currentColor"/><circle cx="5.4" cy="11.8" r="2.1" fill="currentColor"/><path d="M5.1 3.9 9.9 5.4M3.8 5.2 4.9 9.9M10.6 7.6 7 10.6" stroke="currentColor" stroke-width="1.1"/></svg>
+            Machine learning for clinical decision support
+          </span>
+          <h1 class="name">Yanke Li</h1>
+          <p class="name-cn" lang="zh">李衍锞</p>
+          <div class="role">
+            <p class="now">Incoming Postdoctoral Researcher in <b>AI for Robust Clinical Prediction Modelling</b>, Big Data Institute, University of Oxford</p>
+            <p class="prev">PhD, ETH Zürich · Sensory-Motor Systems Lab &amp; SCAI Lab</p>
+          </div>
+          <div class="hero-bio">
+            <p>I build the parts of an <i>explainable clinical digital twin</i>: models of individual patients that keep their state in a form a clinician can inspect, predict how it changes, and answer what-if questions about treatment. My work joins two causal traditions that are usually kept apart — structure learning with graphical models, and potential-outcomes reasoning — with deep temporal models that are interpretable by design rather than explained after the fact.</p>
+            <p>I completed my doctorate at ETH Zürich with Prof. Robert Riener, Prof. Julia Vogt, and Dr. Diego Paez-Granados, working closely with clinicians at the Swiss Paraplegic Centre. In September 2026 I join Prof. Christopher Yau's group at the University of Oxford to work on simulation-based pre-training for robust and trustworthy clinical prediction models.</p>
+          </div>
+          <div class="hero-links">
+            <a class="primary" href="mailto:liyankeyan@gmail.com">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+              Email
+            </a>
+            <a href="https://github.com/14110951D0" rel="me noopener">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.7a10.4 10.4 0 0 0-3.3 20.2c.5.1.7-.2.7-.5v-1.8c-2.9.6-3.5-1.4-3.5-1.4-.5-1.2-1.2-1.5-1.2-1.5-1-.6 0-.6 0-.6 1 0 1.6 1 1.6 1 .9 1.6 2.4 1.1 3 .9 0-.7.3-1.1.6-1.4-2.3-.3-4.7-1.2-4.7-5.1 0-1.1.4-2 1-2.8-.1-.2-.5-1.3.1-2.7 0 0 .9-.3 2.9 1a10 10 0 0 1 5.2 0c2-1.3 2.9-1 2.9-1 .6 1.4.2 2.5.1 2.7.7.8 1 1.7 1 2.8 0 4-2.4 4.8-4.7 5.1.4.3.7 1 .7 1.9v2.9c0 .3.2.6.7.5A10.4 10.4 0 0 0 12 1.7Z"/></svg>
+              GitHub
+            </a>
+            <a href="https://www.linkedin.com/in/yanke-li-9954a8251/" rel="me noopener">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.6c0-1.3 0-3-1.9-3s-2.2 1.4-2.2 2.9V21h-4V9Z"/></svg>
+              LinkedIn
+            </a>
+            <a href="YankeLi_CV.pdf">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              Curriculum Vitae
+            </a>
+          </div>
+        </div>
+        <figure class="portrait">
+          <svg class="graph-motif" width="150" height="130" viewBox="0 0 150 130" fill="none" aria-hidden="true">
+            <circle cx="18" cy="22" r="6" fill="currentColor" opacity="0.9"/>
+            <circle cx="76" cy="12" r="5" fill="currentColor" opacity="0.55"/>
+            <circle cx="126" cy="34" r="7" fill="currentColor" opacity="0.75"/>
+            <circle cx="46" cy="66" r="5" fill="currentColor" opacity="0.55"/>
+            <circle cx="104" cy="86" r="6" fill="currentColor" opacity="0.9"/>
+            <circle cx="30" cy="112" r="5" fill="currentColor" opacity="0.5"/>
+            <path d="M23.5 24.5 70 14M81 13.5l38 18M20 28l22 32M51 68l47 15M121 40l-14 39M35 108l64-19M22 27l78 55" stroke="currentColor" stroke-width="1.3" opacity="0.5"/>
+          </svg>
+          <img src="{{PHOTO_SRC}}" alt="Portrait of Yanke Li" width="640" height="800">
+          <figcaption class="loc">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            Zürich, Switzerland → Oxford, United Kingdom
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= News ================= -->
+  <div class="wrap">
+    <section class="block" id="news">
+      <div class="section-head">
+        <span class="eyebrow">Recent</span>
+        <h2>News</h2>
+      </div>
+      <ul class="news">
+        <li>
+          <span class="date">Aug 2026</span>
+          <p>My doctoral thesis, <i>Towards Explainable Digital Twins for Clinical Decision Support across Spinal Cord Injury and Intensive Care</i>, was accepted at ETH Zürich.</p>
+        </li>
+        <li>
+          <span class="date">Jul 2026</span>
+          <p>I will join the <b>University of Oxford</b> as a Postdoctoral Researcher in AI for Robust Clinical Prediction Modelling, working with Prof. Christopher Yau at the Big Data Institute.</p>
+        </li>
+        <li>
+          <span class="date">Jan 2026</span>
+          <p>Two co-first-author papers accepted at <b>ICLR 2026</b>: <i>GARLIC</i>, on interpretable graph attention for intensive-care time series, and <i>BioBO</i>, on biology-informed Bayesian optimization for perturbation design.</p>
+        </li>
+        <li>
+          <span class="date">Dec 2025</span>
+          <p><i>KarmaTS</i> was presented at <b>ML4H 2025</b> in San Diego, supported by an ML4H Travel Award.</p>
+        </li>
+        <li>
+          <span class="date">Oct 2025</span>
+          <p>Oral presentation at the <b>ISCoS Annual Meeting</b> in Gothenburg on graphical modelling for pressure-injury risk prediction.</p>
+        </li>
+        <li>
+          <span class="date">Apr 2025</span>
+          <p>Our team placed <b>first of 14</b> in the ASIA Data Science Challenge on predicting functional recovery after traumatic spinal cord injury.</p>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <!-- ================= Research ================= -->
+  <div class="wrap">
+    <section class="block" id="research">
+      <div class="section-head">
+        <span class="eyebrow">What I work on</span>
+        <h2>Research</h2>
+        <p class="section-intro">A clinical record tells you what happened — never what would have happened. My research builds models that clinicians can question anyway: graphs that say which factors carry risk, temporal models whose explanation is the model itself, and simulation frameworks that manufacture the ground truth needed to check a causal claim.</p>
+      </div>
+
+      <blockquote class="thesis-quote">
+        Medicine will not be improved by models that take the decision away from the clinician. It will be improved by models a clinician can work with — and nobody can work with a model they cannot question.
+        <cite>— from my doctoral thesis (ETH Zürich, 2026)</cite>
+      </blockquote>
+
+      <div class="themes">
+        <article class="theme">
+          <h3>Causal structure learning for real clinical data</h3>
+          <p>Rehabilitation cohorts are small and mixed-type, with gaps that mean something and causes that were never recorded. I develop structure-learning methods that admit latent confounders and mixed variables — including a predictive permutation conditional independence test — and use the learned graph as both explanation and feature selector. Applied to hospital-acquired pressure-injury risk in spinal cord injury, this reached a nested AUROC of 0.952; causal fusion then lets small, mismatched cohorts inform one another about structure rather than about patients.</p>
+          <div class="outputs">
+            <span class="chip">Scientific Reports 2024</span>
+            <span class="chip">Causal fusion</span>
+            <span class="chip">Wound microbiome</span>
+          </div>
+        </article>
+        <article class="theme">
+          <h3>Interpretable-by-design temporal models</h3>
+          <p>Post-hoc explanations of clinical time-series models are unstable and often disagree with one another. GARLIC predicts intensive-care outcomes from irregular, incomplete trajectories, and its own attention weights and learned graph edges <i>are</i> the explanation — passing faithfulness tests that the interpretable baselines fail, while outperforming the baselines tested on three ICU benchmarks.</p>
+          <div class="outputs">
+            <span class="chip">GARLIC · ICLR 2026</span>
+          </div>
+        </article>
+        <article class="theme">
+          <h3>Simulation and known-truth evaluation</h3>
+          <p>No architecture can validate a counterfactual claim against a record that never contains one. KarmaTS makes discrete-time causal processes executable, so temporal methods can be graded against dynamics that are known because someone wrote them down. ICareDT writes matched counterfactuals onto real intensive-care histories, letting treatment-effect estimates be scored against a known answer — cutting error by more than an order of magnitude versus the naive factual contrast. This line continues at Oxford in simulation-based pre-training for robust prediction models.</p>
+          <div class="outputs">
+            <span class="chip">KarmaTS · ML4H 2025</span>
+            <span class="chip">ICareDT</span>
+          </div>
+        </article>
+        <article class="theme">
+          <h3>Decision-making under uncertainty in the laboratory</h3>
+          <p>The same causal ideas steer experiments. BioBO brings biology-informed priors — from gene embeddings and enrichment analysis — into Bayesian optimization for perturbation design, letting prior beliefs guide exploration while their influence fades as evidence arrives, under a bound that limits what a wrong belief can cost. Developed during my internship at Johnson &amp; Johnson Innovative Medicine and evaluated on the GeneDisco CRISPR benchmarks.</p>
+          <div class="outputs">
+            <span class="chip">BioBO · ICLR 2026</span>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= Publications ================= -->
+  <div class="wrap">
+    <section class="block" id="publications">
+      <div class="section-head">
+        <span class="eyebrow">Papers</span>
+        <h2>Publications</h2>
+      </div>
+
+      <div class="pub-group">
+        <h3>Published &amp; accepted</h3>
+        <ul class="pubs">
+          <li class="pub">
+            <span class="pub-title">GARLIC: Graph Attention-based Relational Learning of Multivariate Time Series in Intensive Care</span>
+            <span class="chip">ICLR 2026</span>
+            <span class="pub-authors"><b>Y. Li</b>*, R. Wang*, M. Günther, D. Paez-Granados</span>
+          </li>
+          <li class="pub">
+            <span class="pub-title">BioBO: Biology-Informed Bayesian Optimization for Perturbation Design</span>
+            <span class="chip">ICLR 2026</span>
+            <span class="pub-authors"><b>Y. Li</b>*, T. Cui*, T. Mansi, M. Prakash, R. Liao</span>
+          </li>
+          <li class="pub">
+            <span class="pub-title">The ASIA Data Science Challenge — Predicting Functional and Neurological Recovery from Acute ISNCSCI Scores</span>
+            <span class="chip">TSCIR 2026</span>
+            <span class="pub-authors">J. Villines*, R. Stirnimann*, L.-P. Lukas, O. Taran, M. Tuci, <b>Y. Li</b>, C. R. Jutzeler, J. L. K. Kramer, F. Geisler, D. Bourbeau, R. J. Cotton&#8224;, S. C. Brüningk&#8224;, and the ASIA Engineering and Data Science Committee</span>
+          </li>
+          <li class="pub">
+            <span class="pub-title">KarmaTS: A Universal Simulation Platform for Multivariate Time Series with Functional Causal Dynamics</span>
+            <span class="chip">ML4H 2025</span>
+            <span class="pub-authors"><b>Y. Li</b>*, H. Li*, D. Paez-Granados</span>
+          </li>
+          <li class="pub">
+            <span class="pub-title">Automated Prediction of Item-Level ARAT Scores from Wearable Sensors</span>
+            <span class="chip">ICORR 2025</span>
+            <span class="pub-authors">T. Weikert, <b>Y. Li</b>, D. Paez-Granados, C. Awai Easthope</span>
+          </li>
+          <li class="pub">
+            <span class="pub-title">Mixed-Variable Graphical Modelling Towards Risk Prediction of Hospital-Acquired Pressure Injury in Spinal Cord Injury Individuals</span>
+            <span class="chip">Scientific Reports 2024</span>
+            <span class="pub-authors"><b>Y. Li</b>, A. Scheel-Sailer, R. Riener, D. Paez-Granados</span>
+          </li>
+          <li class="pub">
+            <span class="pub-title">Robust Feature Selection for Continuous BP Estimation in Multiple Populations: Towards Cuffless Ambulatory BP Monitoring</span>
+            <span class="chip">IEEE JBHI 2024</span>
+            <span class="pub-authors">A. Cisnal, <b>Y. Li</b>, B. Fuchs, M. Ejtehadi, R. Riener, D. Paez-Granados</span>
+          </li>
+          <li class="pub">
+            <span class="pub-title">Causal Domain Adaptation via Perturbed DAG Reconstruction</span>
+            <span class="chip">arXiv 2022</span>
+            <span class="pub-authors"><b>Y. Li</b>, T. Hatt, I. Bica, M. van der Schaar (MSc thesis, ETH Zürich)</span>
+          </li>
+          <li class="pub">
+            <span class="pub-title">A Closer Look at the Training Strategy for Modern Meta-Learning</span>
+            <span class="chip">NeurIPS 2020</span>
+            <span class="pub-authors">J. Chen, X. Wu, <b>Y. Li</b>, Q. Li, L. Zhan, F. Chung</span>
+          </li>
+          <li class="pub">
+            <span class="pub-title">Improvement of Embedding Channel-Wise Activation in Soft-Attention Neural Image Captioning</span>
+            <span class="chip">ICVISP 2018</span>
+            <span class="pub-authors"><b>Y. Li</b></span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="pub-group">
+        <h3>Under review</h3>
+        <ul class="pubs">
+          <li class="pub">
+            <span class="pub-title">ICareDT: Towards Personalized Causal Digital Twin for Intensive Care</span>
+            <span class="chip">npj Digital Medicine</span>
+            <span class="pub-authors"><b>Y. Li</b>, Y. Qi, D. Paez-Granados</span>
+          </li>
+          <li class="pub">
+            <span class="pub-title">Anaerobic Microbial Communities Influence Wound Recovery Outcome in Pressure Injuries: A Machine Learning Approach</span>
+            <span class="chip">Scientific Reports</span>
+            <span class="pub-authors"><b>Y. Li</b>, J. Stoyanov, R. Riener, R. Wettstein, S. Capossela, D. Paez-Granados&#8224;, A. Bertolo&#8224;</span>
+          </li>
+          <li class="pub">
+            <span class="pub-title">Patient Digital Twins for Caregiving Robots</span>
+            <span class="chip">Book chapter</span>
+            <span class="pub-authors">D. Paez-Granados, <b>Y. Li</b>, M. Ejtehadi, B. Fuchs, O. Gnarra (Springer Moonshot Consortium)</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="pub-group">
+        <h3>In preparation</h3>
+        <ul class="pubs">
+          <li class="pub">
+            <span class="pub-title">Causal Graphical Fusion with Attention Steering for Incomplete Spinal Cord Injury Data</span>
+            <span class="pub-authors"><b>Y. Li</b>, D. Al Jorf, A. Ighissou, A. Scheel-Sailer, J. Pannek, R. Riener, D. Paez-Granados</span>
+          </li>
+          <li class="pub">
+            <span class="pub-title">Collaborative Causal Discovery with Multimodal Data in Spinal Cord Injury</span>
+            <span class="pub-authors"><b>Y. Li</b>*, S. Zhong*, H. Li, R. Riener, D. Paez-Granados</span>
+          </li>
+          <li class="pub">
+            <span class="pub-title">GRITS: Graphical Imputation for Multivariate Time Series</span>
+            <span class="pub-authors">S. Joray, <b>Y. Li</b>, D. Paez-Granados</span>
+          </li>
+          <li class="pub">
+            <span class="pub-title">Neurological Gait Kinematics and Kinetics Analysis Using Monocular Vision</span>
+            <span class="pub-authors">S. Natraj, <b>Y. Li</b>, M. Ruepp, R. Riener, D. Paez-Granados</span>
+          </li>
+        </ul>
+      </div>
+
+      <p class="pub-note">* equal contribution · &#8224; shared senior authorship</p>
+    </section>
+  </div>
+
+  <!-- ================= Talks ================= -->
+  <div class="wrap">
+    <section class="block" id="talks">
+      <div class="section-head">
+        <span class="eyebrow">Presentations</span>
+        <h2>Talks &amp; posters</h2>
+      </div>
+      <ul class="talks">
+        <li>
+          <span class="date">Apr 2026</span>
+          <span class="what"><b>ICLR 2026</b> — GARLIC and BioBO (posters)
+            <span class="where">Rio de Janeiro, Brazil</span></span>
+        </li>
+        <li>
+          <span class="date">Dec 2025</span>
+          <span class="what"><b>Machine Learning for Health (ML4H)</b> — KarmaTS (poster)
+            <span class="where">San Diego, United States</span></span>
+        </li>
+        <li>
+          <span class="date">Oct 2025</span>
+          <span class="what"><b>ISCoS Annual Meeting</b> — Mixed-variable graphical modelling towards risk prediction of hospital-acquired pressure injury (oral)
+            <span class="where">Gothenburg, Sweden</span></span>
+        </li>
+        <li>
+          <span class="date">May 2024</span>
+          <span class="what"><b>AI for Good Global Summit</b> — A digital twin framework for chronic diseases (booth)
+            <span class="where">Geneva, Switzerland</span></span>
+        </li>
+        <li>
+          <span class="date">Apr 2023</span>
+          <span class="what"><b>European Causal Inference Meeting</b> — Continual causal discovery and inference for SCI comorbidities (poster)
+            <span class="where">Oslo, Norway</span></span>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <!-- ================= Teaching & Mentoring ================= -->
+  <div class="wrap">
+    <section class="block" id="teaching">
+      <div class="section-head">
+        <span class="eyebrow">Academic service</span>
+        <h2>Teaching, mentoring &amp; review</h2>
+      </div>
+      <div class="split">
+        <div>
+          <p class="subhead">Teaching</p>
+          <p class="plain"><b>Artificial Intelligence for Healthcare and Rehabilitation</b>, ETH Zürich<br>
+          <span style="color:var(--muted)">Teaching Assistant — Autumn 2024 &amp; Autumn 2025</span></p>
+          <p class="subhead">Peer review</p>
+          <p class="plain">Conferences: NeurIPS, ICLR, ICML, AISTATS, ML4H</p>
+          <p class="plain">Journals: Journal of NeuroEngineering and Rehabilitation</p>
+        </div>
+        <div>
+          <p class="subhead">Student supervision</p>
+          <ul>
+            <li><span class="yr">2026</span><span>D. Al Jorf <span class="detail">— Master's lab practice, ETH Zürich</span></span></li>
+            <li><span class="yr">2025</span><span>R. Wang <span class="detail">— Master's thesis, University of Zurich</span></span></li>
+            <li><span class="yr">2025</span><span>Y. Qi <span class="detail">— Master's thesis, ETH Zürich</span></span></li>
+            <li><span class="yr">2025</span><span>S. Joray <span class="detail">— Master's internship, ETH Zürich</span></span></li>
+            <li><span class="yr">2024</span><span>A. Ighissou <span class="detail">— Master's thesis, University of Milano-Bicocca</span></span></li>
+            <li><span class="yr">2024</span><span>J. Koch <span class="detail">— Semester project, ETH Zürich</span></span></li>
+            <li><span class="yr">2023</span><span>H. Li <span class="detail">— Master's internship, TU Munich</span></span></li>
+            <li><span class="yr">2023</span><span>B. Wu <span class="detail">— Master's thesis, TU Munich</span></span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= Awards ================= -->
+  <div class="wrap">
+    <section class="block" id="awards">
+      <div class="section-head">
+        <span class="eyebrow">Recognition</span>
+        <h2>Awards &amp; scholarships</h2>
+      </div>
+      <ul class="awards">
+        <li>
+          <span class="date">Nov 2025</span>
+          <p><span class="award-mark" aria-hidden="true">&#10022;</span>Machine Learning for Health (ML4H) Travel Award</p>
+        </li>
+        <li>
+          <span class="date">Apr 2025</span>
+          <p><span class="award-mark" aria-hidden="true">&#10022;</span>First place (of 14 teams), ASIA Data Science Challenge — functional recovery prediction after traumatic spinal cord injury</p>
+        </li>
+        <li>
+          <span class="date">Feb 2018</span>
+          <p><span class="award-mark" aria-hidden="true">&#10022;</span>Outstanding Student Award, Faculty of Applied Science &amp; Textiles, PolyU <span class="detail">— top graduate of the faculty; BSc GPA 4.00/4.00</span></p>
+        </li>
+        <li>
+          <span class="date">2014–18</span>
+          <p><span class="award-mark" aria-hidden="true">&#10022;</span>Dean's Honours List (top 5%), PolyU · Ho &amp; Ho Foundation Entry Scholarship for outstanding students</p>
+        </li>
+        <li>
+          <span class="date">May 2017</span>
+          <p><span class="award-mark" aria-hidden="true">&#10022;</span>Bauhinia Cup Outstanding Entrepreneurs Association Scholarship</p>
+        </li>
+        <li>
+          <span class="date">Oct 2016</span>
+          <p><span class="award-mark" aria-hidden="true">&#10022;</span>Commercial Radio 50th Anniversary Scholarship</p>
+        </li>
+        <li>
+          <span class="date">Jun 2015</span>
+          <p><span class="award-mark" aria-hidden="true">&#10022;</span>Reaching Out Award, Hong Kong Government Scholarship</p>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+</main>
+
+<!-- ================= Footer ================= -->
+<footer class="site" id="contact">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-contact">
+        <h2>Get in touch</h2>
+        <p>I am happy to hear about collaborations in machine learning for health, causal inference, and clinical prediction modelling.</p>
+        <a class="mail" href="mailto:liyankeyan@gmail.com">liyankeyan@gmail.com</a>
+      </div>
+      <div class="foot-links">
+        <a href="https://github.com/14110951D0" rel="me noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/yanke-li-9954a8251/" rel="me noopener">LinkedIn</a>
+        <a href="YankeLi_CV.pdf">Curriculum Vitae (PDF)</a>
+      </div>
+    </div>
+    <div class="colophon">
+      <span>© 2026 Yanke Li</span>
+      <span>ETH Zürich → University of Oxford</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
