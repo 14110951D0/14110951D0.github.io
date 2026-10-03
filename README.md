@@ -1,33 +1,31 @@
 # Yanke Li — personal academic website
 
-A single-file, self-contained static site (`index.html`): the Source Serif 4 fonts
-and the portrait photo are embedded as data URIs, so there are no external
-requests and no build step. `YankeLi_CV.pdf` sits next to it and is linked from
-the CV buttons.
+Live at **https://14110951d0.github.io**, served by GitHub Pages from the `main`
+branch of `14110951D0/14110951D0.github.io`. Every push to `main` redeploys
+within about a minute.
+
+The deployed page is a single self-contained `index.html`: the Source Serif 4
+fonts and the portrait are embedded as base64 data URIs, so it makes no
+external requests. `YankeLi_CV.pdf` sits next to it and is linked from the CV
+buttons.
 
 ## Files
 
 | File | Purpose |
 |---|---|
-| `index.html` | The website (self-contained; deploy this) |
-| `YankeLi_CV.pdf` | CV linked from the site — replace with each new CV version |
-| `_template.html` | Editable source: same page with `{{FONT_NORMAL}}`, `{{FONT_ITALIC}}`, `{{PHOTO_SRC}}` placeholders instead of base64 blobs. Edit this, then re-inject the assets (any text replace works) |
-| `assets/photo.jpg` | The 640×800 web crop of the portrait |
+| `_template.html` | **Edit this.** The page with `{{FONT_NORMAL}}`, `{{FONT_ITALIC}}` and `{{PHOTO_SRC}}` placeholders instead of base64 blobs |
+| `build.sh` | Embeds the assets into the template and writes `index.html` |
+| `index.html` | Generated output — the deployed page. Don't edit by hand |
+| `YankeLi_CV.pdf` | CV linked from the site — overwrite with each new version |
+| `assets/photo.jpg` | 640×800 web crop of the portrait |
+| `assets/fonts/` | Source Serif 4, latin subset (SIL Open Font License 1.1) |
 
-## Deploy to GitHub Pages
+## Updating the site
 
-1. Create a repository named `<username>.github.io` on GitHub
-   (for the user `14110951D0` that is `14110951D0.github.io`).
-2. Put `index.html` and `YankeLi_CV.pdf` in the repository root and push.
-3. In the repository: Settings → Pages → Source: “Deploy from a branch”,
-   branch `main`, folder `/ (root)`.
-4. The site appears at `https://<username>.github.io` within a minute or two.
+```bash
+./build.sh
+git add -A && git commit -m "Update site" && git push
+```
 
-Any other static host (Netlify, Cloudflare Pages, university web space) works
-the same way — upload the two files.
-
-## Updating content
-
-Edit the text directly in `index.html` (the content is at the bottom, below the
-embedded font data), or edit `_template.html` and re-inject the assets. To update
-the CV, just overwrite `YankeLi_CV.pdf`.
+`build.sh` needs only `bash` and `perl` (both ship with Git for Windows). To
+update just the CV, overwrite `YankeLi_CV.pdf` and commit; no rebuild needed.
