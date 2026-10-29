@@ -49,6 +49,23 @@
   --graph-node: rgba(8, 44, 84, 0.22);
   --graph-accent: rgba(14, 116, 144, 0.38);
   --graph-pulse: rgba(14, 116, 144, 0.55);
+  --part1: #537578;
+  --part2: #55708C;
+  --part3: #8A6B42;
+  --part-problem: #A2635C;
+  --part-result: #5F774F;
+  --part1-soft: rgba(83, 117, 120, 0.14);
+  --part2-soft: rgba(85, 112, 140, 0.14);
+  --part3-soft: rgba(138, 107, 66, 0.15);
+  --on-part: #FFFFFF;
+  --fig-bg: #FFFFFF;
+  --fig-filter: none;
+  --fig-pill-bg: rgba(27, 37, 52, 0.78);
+  --fig-pill-ink: #FFFFFF;
+  --fig-focus: #0E7490;
+  --seg-on: #FFFFFF;
+  --scrim: rgba(6, 12, 22, 0.72);
+  --lb-shadow: 0 24px 64px -16px rgba(0, 0, 0, 0.5);
   --serif: 'Source Serif 4', 'Sitka Text', Cambria, Georgia, serif;
   --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
@@ -75,6 +92,23 @@
     --graph-node: rgba(188, 208, 236, 0.20);
     --graph-accent: rgba(69, 185, 204, 0.42);
     --graph-pulse: rgba(69, 185, 204, 0.6);
+    --part1: #8DB2B4;
+    --part2: #94AACA;
+    --part3: #CDAE80;
+    --part-problem: #D3958C;
+    --part-result: #A6BC94;
+    --part1-soft: rgba(141, 178, 180, 0.16);
+    --part2-soft: rgba(148, 170, 202, 0.16);
+    --part3-soft: rgba(205, 174, 128, 0.17);
+    --on-part: #0D1521;
+    --fig-bg: #FFFFFF;
+    --fig-filter: brightness(0.9);
+    --fig-pill-bg: rgba(27, 37, 52, 0.82);
+    --fig-pill-ink: #FFFFFF;
+    --fig-focus: #0E7490;
+    --seg-on: #2C3D55;
+    --scrim: rgba(6, 12, 22, 0.72);
+    --lb-shadow: 0 24px 64px -16px rgba(0, 0, 0, 0.5);
   }
 }
 :root[data-theme="dark"] {
@@ -99,6 +133,23 @@
   --graph-node: rgba(188, 208, 236, 0.20);
   --graph-accent: rgba(69, 185, 204, 0.42);
   --graph-pulse: rgba(69, 185, 204, 0.6);
+  --part1: #8DB2B4;
+  --part2: #94AACA;
+  --part3: #CDAE80;
+  --part-problem: #D3958C;
+  --part-result: #A6BC94;
+  --part1-soft: rgba(141, 178, 180, 0.16);
+  --part2-soft: rgba(148, 170, 202, 0.16);
+  --part3-soft: rgba(205, 174, 128, 0.17);
+  --on-part: #0D1521;
+  --fig-bg: #FFFFFF;
+  --fig-filter: brightness(0.9);
+  --fig-pill-bg: rgba(27, 37, 52, 0.82);
+  --fig-pill-ink: #FFFFFF;
+  --fig-focus: #0E7490;
+  --seg-on: #2C3D55;
+  --scrim: rgba(6, 12, 22, 0.72);
+  --lb-shadow: 0 24px 64px -16px rgba(0, 0, 0, 0.5);
 }
 
 /* ---------- Base ---------- */
@@ -280,25 +331,280 @@ section.block { padding: clamp(2.2rem, 5vw, 3.4rem) 0; border-top: 1px solid var
 .thesis-quote {
   border-left: 3px solid var(--accent);
   padding: 0.25rem 0 0.25rem 1.25rem;
-  margin: 1.4rem 0 2rem; max-width: 64ch;
-  font-style: italic; font-size: 1.08rem; color: var(--ink);
+  margin: clamp(2.4rem, 5vw, 3.2rem) 0 0; max-width: 64ch;
 }
-.thesis-quote cite {
-  display: block; margin-top: 0.5rem;
-  font-style: normal; font-family: var(--sans); font-size: 0.8rem; color: var(--faint);
+.thesis-quote blockquote { font-style: italic; font-size: 1.08rem; color: var(--ink); }
+.thesis-quote figcaption {
+  margin-top: 0.5rem;
+  font-family: var(--sans); font-size: 0.8rem; color: var(--faint);
 }
-.themes { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
-.theme {
-  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
-  padding: 1.35rem 1.45rem 1.3rem;
-  display: flex; flex-direction: column; gap: 0.6rem;
-  box-shadow: var(--shadow);
+.thesis-quote cite { font-style: italic; }
+
+/* ---------- Research: map ---------- */
+/* ---------- Research map (figure.rmap) ---------- */
+
+/* Part tokens: the thesis parts, coloured as in the PhD defense deck */
+
+.rmap { position: relative; margin: 0; }
+
+/* View switcher: visually hidden radios + labels as a segmented control */
+.rmap .rm-radio {
+  position: absolute; top: 0; left: 0;
+  width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
 }
-.theme h3 { font-size: 1.12rem; font-weight: 600; color: var(--oxford); line-height: 1.35; text-wrap: balance; }
-.theme p { font-size: 0.94rem; line-height: 1.6; color: var(--muted); }
-.theme .outputs {
-  margin-top: auto; padding-top: 0.65rem;
-  display: flex; flex-wrap: wrap; gap: 0.4rem;
+.rmap .rm-head {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: .7rem 1.5rem; margin-bottom: 1.1rem;
+}
+.rmap .rm-switch {
+  display: inline-flex; gap: 2px; padding: 3px;
+  background: var(--chip-bg); border: 1px solid var(--line); border-radius: 999px;
+  font-family: var(--sans); font-size: .82rem; line-height: 1.3;
+}
+.rmap .rm-switch label {
+  display: block; padding: .36rem .95rem; border-radius: 999px;
+  color: var(--muted); font-weight: 600; white-space: nowrap; cursor: pointer;
+  transition: background-color .15s ease, color .15s ease, box-shadow .15s ease;
+}
+.rmap .rm-switch label:hover { color: var(--ink); }
+#rm-view-journey:checked ~ .rm-head label[for="rm-view-journey"],
+#rm-view-method:checked ~ .rm-head label[for="rm-view-method"] {
+  background: var(--seg-on); color: var(--oxford);
+  box-shadow: 0 0 0 1px var(--line), var(--shadow);
+  outline: 1px solid transparent; /* shows as a frame in forced-colours mode */
+}
+#rm-view-journey:focus-visible ~ .rm-head label[for="rm-view-journey"],
+#rm-view-method:focus-visible ~ .rm-head label[for="rm-view-method"] {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+
+/* Research questions, coloured as on the deck */
+.rmap .rm-rq {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .4rem 1rem;
+  list-style: none; font-family: var(--sans); font-size: .8rem; color: var(--muted);
+}
+.rmap .rm-rq li { display: inline-flex; align-items: center; gap: .4rem; white-space: nowrap; }
+.rmap .rm-rq b {
+  font-size: .72rem; font-weight: 700; letter-spacing: .02em; line-height: 1;
+  padding: .24rem .46rem; border: 1.5px solid currentColor; border-radius: 999px;
+  background: var(--card);
+}
+.rmap .rm-q1 { color: var(--part1); }
+.rmap .rm-q2 { color: var(--part2); }
+.rmap .rm-q3 { color: var(--part3); }
+.rmap .rm-q4 { color: var(--part-problem); }
+
+.rmap .rm-hint {
+  display: none; margin: -.4rem 0 .5rem;
+  font-family: var(--sans); font-size: .78rem; font-style: italic; color: var(--faint);
+}
+
+/* Show one view at a time */
+.rmap .rm-panel-method,
+.rmap .rm-cap-method,
+#rm-view-method:checked ~ .rm-panel-journey,
+#rm-view-method:checked ~ figcaption .rm-cap-journey,
+#rm-view-method:checked ~ .rm-head .rm-rq { display: none; }
+#rm-view-method:checked ~ .rm-panel-method { display: block; }
+#rm-view-method:checked ~ figcaption .rm-cap-method { display: inline; }
+
+/* Drawing: full column width; scrolls inside its own box on narrow screens */
+.rmap .rm-scroll { overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; }
+.rmap .rm-canvas { position: relative; min-width: 720px; }
+.rmap .rm-canvas > svg { display: block; width: 100%; height: auto; }
+.rmap .rm-canvas > .rm-links { position: absolute; top: 0; left: 0; height: 100%; pointer-events: none; }
+.rmap svg text { font-family: var(--sans); }
+
+/* Colour classes (all from tokens) */
+.rmap .rm-f1 { fill: var(--part1); }
+.rmap .rm-f2 { fill: var(--part2); }
+.rmap .rm-f3 { fill: var(--part3); }
+.rmap .rm-f4 { fill: var(--part-problem); }
+.rmap .rm-s1 { stroke: var(--part1); }
+.rmap .rm-s2 { stroke: var(--part2); }
+.rmap .rm-s3 { stroke: var(--part3); }
+.rmap .rm-s4 { stroke: var(--part-problem); }
+.rmap .rm-mk1 path { fill: var(--part1); }
+.rmap .rm-mk2 path { fill: var(--part2); }
+.rmap .rm-mk3 path { fill: var(--part3); }
+.rmap .rm-tc1 { fill: var(--part1); }
+.rmap .rm-tc2 { fill: var(--part2); }
+.rmap .rm-tc3 { fill: var(--part3); }
+.rmap .rm-stop3 { stop-color: var(--part3); }
+.rmap .rm-stop4 { stop-color: var(--part-problem); }
+
+/* Journey view */
+.rmap .rm-track line { stroke-width: 3; stroke-opacity: .5; }
+.rmap .rm-glyph { fill: none; stroke: var(--on-part); stroke-linecap: round; stroke-linejoin: round; }
+.rmap .rm-lane path { fill: var(--card); stroke: var(--line); stroke-width: 1; }
+.rmap .rm-sep line {
+  stroke: var(--faint); stroke-opacity: .55; stroke-width: 1.4;
+  stroke-dasharray: .1 4.5; stroke-linecap: round;
+}
+.rmap .rm-arrow { fill: none; stroke-width: 1.6; stroke-linejoin: round; }
+.rmap .rm-mid { text-anchor: middle; }
+.rmap .rm-t-stage { font-size: 13px; font-weight: 700; fill: var(--ink); }
+.rmap .rm-t-sub { font-size: 13px; fill: var(--muted); }
+.rmap .rm-t-part { font-size: 12.5px; font-weight: 700; letter-spacing: .1em; }
+.rmap .rm-t-lane { font-size: 14px; font-weight: 700; fill: var(--ink); }
+.rmap .rm-t-note { font-size: 13px; font-style: italic; fill: var(--muted); }
+.rmap .rm-t-lbl {
+  font-size: 13px; font-style: italic; fill: var(--muted);
+  paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round;
+}
+
+/* Method view */
+.rmap .rm-t-head { font-size: 13px; font-weight: 700; fill: var(--ink); }
+.rmap .rm-rule { stroke: var(--line); stroke-width: 1; }
+.rmap .rm-t-d1 { font-size: 13px; fill: var(--ink); }
+.rmap .rm-t-d2 { font-size: 13px; font-style: italic; fill: var(--muted); }
+.rmap .rm-empty circle { fill: var(--faint); fill-opacity: .45; }
+.rmap .rm-thread line { stroke: var(--faint); stroke-opacity: .4; stroke-width: 3; stroke-linecap: round; }
+.rmap .rm-dot circle { stroke: var(--paper); stroke-width: 2.5; }
+
+/* Study pills: links to the project summaries */
+.rmap .rm-links a { pointer-events: auto; cursor: pointer; text-decoration: none; }
+.rmap .rm-links a:focus,
+.rmap .rm-links a:focus-visible { outline: none; }
+.rmap .rm-c1 { color: var(--part1); }
+.rmap .rm-c2 { color: var(--part2); }
+.rmap .rm-c3 { color: var(--part3); }
+.rmap .rm-body { fill: currentColor; }
+.rmap .rm-ptxt { font-size: 14px; font-weight: 700; fill: var(--on-part); text-anchor: middle; }
+.rmap .rm-syn .rm-body { fill: var(--card); stroke: currentColor; stroke-width: 1.6; stroke-dasharray: 5 3.4; }
+.rmap .rm-panel-method .rm-syn .rm-body { fill: var(--paper); }
+.rmap .rm-syn .rm-ptxt { fill: currentColor; }
+.rmap .rm-split-j .rm-body { fill: url(#rm-j-split); }
+.rmap .rm-split-m .rm-body { fill: url(#rm-m-split); }
+.rmap .rm-halo { fill: none; stroke: transparent; stroke-width: 2; transition: stroke .15s ease; }
+@media (hover: hover) {
+  .rmap .rm-links a:hover .rm-halo { stroke: currentColor; }
+}
+.rmap .rm-links a:focus-visible .rm-halo { stroke: var(--accent); stroke-width: 2.5; }
+
+/* Legends */
+.rmap .rm-legend {
+  display: flex; flex-wrap: wrap; gap: .45rem 1.6rem; margin-top: .8rem;
+  list-style: none; font-family: var(--sans); font-size: .8rem; line-height: 1.4; color: var(--muted);
+}
+.rmap .rm-legend li { display: inline-flex; align-items: center; gap: .5rem; }
+.rmap .rm-sw { display: block; width: 28px; height: 14px; flex-shrink: 0; }
+.rmap .rm-sw-line { fill: none; stroke: var(--muted); stroke-width: 1.6; }
+.rmap .rm-sw-head { fill: var(--muted); }
+.rmap .rm-sw-dash { fill: none; stroke: var(--part2); stroke-width: 1.5; stroke-dasharray: 3.5 2.5; }
+.rmap .rm-key { display: inline-block; flex-shrink: 0; width: 11px; height: 11px; border-radius: 50%; }
+.rmap .rm-k1 { background: var(--part1); }
+.rmap .rm-k2 { background: var(--part2); }
+.rmap .rm-k3 { background: var(--part3); }
+.rmap .rm-kt { width: 3px; height: 16px; border-radius: 2px; background: var(--faint); opacity: .55; }
+
+.rmap figcaption {
+  margin-top: .75rem; max-width: 72ch;
+  font-family: var(--sans); font-size: .84rem; line-height: 1.55; color: var(--muted);
+}
+
+@media (max-width: 759px) {
+  .rmap .rm-hint { display: block; }
+}
+@media (min-width: 760px) {
+  .rmap .rm-canvas { min-width: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rmap .rm-switch label,
+  .rmap .rm-halo { transition: none; }
+}
+
+/* ---------- Research: project cards ---------- */
+.proj-groups { display: grid; gap: clamp(2.2rem, 4vw, 3rem); margin-top: clamp(2.4rem, 5vw, 3.2rem); }
+.proj-group-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: .35rem .9rem; margin-bottom: 1rem; padding-bottom: .55rem; border-bottom: 1px solid var(--line); }
+.proj-group-head h3 { font-family: var(--sans); font-size: .76rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--pc); }
+.proj-group-head p { font-size: .95rem; font-style: italic; color: var(--muted); }
+.proj-group, .proj { --pc: var(--part1); --pc-soft: var(--part1-soft); }
+.proj-group.p2, .proj.p2 { --pc: var(--part2); --pc-soft: var(--part2-soft); }
+.proj-group.p3, .proj.p3 { --pc: var(--part3); --pc-soft: var(--part3-soft); }
+.proj.prel { --pc: var(--muted); --pc-soft: var(--chip-bg); }
+.projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+.proj {
+  display: grid; grid-template-columns: minmax(0, 1fr); grid-row: span 2; grid-template-rows: subgrid; row-gap: 0; overflow: hidden;
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow);
+  scroll-margin-top: 4.5rem;
+}
+.proj:target { outline: 2px solid var(--pc); outline-offset: 3px; }
+.proj-fig {
+  position: relative; display: block;
+  padding: .9rem 1rem 2.6rem; background: var(--fig-bg); border-top: 4px solid var(--pc);
+  cursor: zoom-in; filter: var(--fig-filter);
+}
+.proj-fig img, .proj-fig svg { display: block; width: 100%; height: 100%; object-fit: contain; }
+.proj-fig .proj-zoom {
+  position: absolute; right: .6rem; bottom: .55rem;
+  font-family: var(--sans); font-size: .68rem; font-weight: 600; letter-spacing: .02em;
+  color: var(--fig-pill-ink); background: var(--fig-pill-bg); padding: .2rem .55rem; border-radius: 999px;
+  opacity: .82; transition: opacity .15s ease;
+}
+.proj-fig:hover .proj-zoom, .proj-fig:focus-visible .proj-zoom { opacity: 1; }
+.proj-fig:hover { text-decoration: none; }
+.proj-fig:focus-visible { outline: 2px solid var(--fig-focus); outline-offset: -4px; border-radius: 0; }
+.proj-fig-static { cursor: default; padding: .9rem 1rem; }
+.proj-body { display: flex; flex-direction: column; gap: .55rem; flex: 1; padding: 1.05rem 1.25rem 1.2rem; }
+.proj-meta { display: flex; align-items: center; flex-wrap: wrap; gap: .35rem .6rem; font-family: var(--sans); font-size: .7rem; }
+.proj-part { font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--pc); }
+.proj h4 { font-family: var(--sans); font-size: 1.12rem; font-weight: 700; letter-spacing: .01em; color: var(--oxford); line-height: 1.2; }
+.proj-headline { font-size: 1.02rem; font-style: italic; line-height: 1.4; color: var(--ink); text-wrap: balance; }
+.proj-headline .hl { display: block; }
+.proj-summary { font-size: .94rem; line-height: 1.6; color: var(--muted); text-wrap: pretty; }
+.proj-stats { list-style: none; display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .15rem; }
+.proj-stats li {
+  font-family: var(--sans); font-size: .76rem; font-weight: 600; line-height: 1.3;
+  color: var(--ink); background: var(--pc-soft); padding: .25rem .6rem; border-radius: 6px;
+  font-variant-numeric: tabular-nums; text-wrap: balance;
+}
+.proj-links { display: flex; flex-wrap: wrap; gap: .3rem 1rem; margin-top: auto; padding-top: .45rem; font-family: var(--sans); font-size: .82rem; font-weight: 600; }
+.proj-links a::after { content: "↗"; content: "↗" / ""; display: inline-block; margin-left: .25em; font-weight: 400; }
+
+/* ---------- Research: now at Oxford ---------- */
+.oxford {
+  margin-top: clamp(2.4rem, 5vw, 3.2rem); padding: clamp(1.25rem, 3vw, 1.75rem);
+  background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 12px; box-shadow: var(--shadow);
+  display: grid; gap: 1.1rem;
+}
+.oxford h3 { font-size: clamp(1.2rem, 2.4vw, 1.35rem); font-weight: 600; color: var(--oxford); margin-top: .35rem; text-wrap: balance; }
+.oxford > div > p { color: var(--muted); max-width: 68ch; margin-top: .45rem; }
+.ox-flow { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; }
+.ox-flow li {
+  position: relative; padding: .75rem .85rem .8rem; border-radius: 10px; background: var(--wash); border: 1px solid var(--line);
+  font-size: .86rem; line-height: 1.45; color: var(--muted);
+}
+.ox-flow li b { display: block; font-family: var(--sans); font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-strong); margin-bottom: .2rem; }
+.ox-flow li + li::before {
+  content: ""; position: absolute; left: -1rem; top: 50%; width: .5rem; height: .5rem; transform: translateY(-50%) rotate(45deg);
+  border-top: 2px solid var(--faint); border-right: 2px solid var(--faint);
+}
+.ox-outcomes { display: flex; flex-wrap: wrap; gap: .45rem; list-style: none; }
+.ox-outcomes li { font-family: var(--sans); font-size: .78rem; font-weight: 600; color: var(--chip-ink); background: var(--chip-bg); padding: .28rem .7rem; border-radius: 999px; }
+
+/* ---------- Figure lightbox ---------- */
+.lightbox { border: 0; padding: 0; margin: auto; width: min(1180px, 96vw); max-height: 92vh; background: var(--card); color: var(--ink); border-radius: 12px; box-shadow: var(--lb-shadow); overflow: auto; }
+.lightbox::backdrop { background: var(--scrim, rgba(6, 12, 22, .72)); }
+.lightbox figure { margin: 0; }
+.lightbox img { display: block; width: 100%; height: auto; background: var(--fig-bg); filter: var(--fig-filter); }
+.lightbox figcaption { font-family: var(--sans); font-size: .82rem; color: var(--muted); padding: .7rem 1rem .9rem; }
+.lb-close {
+  position: fixed; top: .75rem; right: .75rem; z-index: 1;
+  width: 2.2rem; height: 2.2rem; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--card); color: var(--ink); font-size: 1.25rem; line-height: 1; cursor: pointer;
+}
+.lb-close:hover { border-color: var(--accent); }
+.lb-close:focus-visible { border-radius: 999px; }
+
+@media (max-width: 720px) {
+  .projects { grid-template-columns: 1fr; }
+  .ox-flow { grid-template-columns: 1fr; }
+  .ox-flow li + li::before { left: 50%; top: -1rem; transform: translateX(-50%) rotate(135deg); }
+  .lightbox figure { overflow-x: auto; overscroll-behavior-x: contain; }
+  .lightbox img { width: 1000px; max-width: none; }
+  .lightbox figcaption { position: sticky; left: 0; max-width: calc(100vw - 2em - 6px); }
 }
 .chip {
   font-family: var(--sans); font-size: 0.72rem; font-weight: 600;
@@ -323,6 +629,8 @@ section.block { padding: clamp(2.2rem, 5vw, 3.4rem) 0; border-top: 1px solid var
   align-items: baseline;
 }
 .pub-title { font-weight: 600; color: var(--ink); line-height: 1.45; font-size: 1rem; }
+a.pub-title { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-color: color-mix(in srgb, var(--accent) 75%, transparent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a.pub-title:hover { color: var(--accent-strong); text-decoration-color: currentColor; }
 .pub-authors {
   grid-column: 1; font-size: 0.9rem; color: var(--muted); line-height: 1.5;
 }
@@ -398,7 +706,6 @@ footer.site {
   .hero-bg { display: none; }
   .portrait { order: -1; }
   .portrait img { max-width: 200px; }
-  .themes { grid-template-columns: 1fr; }
   .split { grid-template-columns: 1fr; }
   .pub { grid-template-columns: 1fr; }
   .pub .chip { grid-row: auto; grid-column: 1; justify-self: start; margin-top: 0.15rem; }
@@ -576,44 +883,508 @@ footer.site {
         <p class="section-intro">A clinical record tells you what happened — never what would have happened. My research builds models that clinicians can question anyway: graphs that say which factors carry risk, temporal models whose explanation is the model itself, and simulation frameworks that manufacture the ground truth needed to check a causal claim.</p>
       </div>
 
-      <blockquote class="thesis-quote">
-        Medicine will not be improved by models that take the decision away from the clinician. It will be improved by models a clinician can work with — and nobody can work with a model they cannot question.
-        <cite>— from my doctoral thesis (ETH Zürich, 2026)</cite>
-      </blockquote>
+      <figure class="rmap">
+  <input class="rm-radio" type="radio" name="rm-view" id="rm-view-journey" aria-describedby="rm-view-name" checked>
+  <input class="rm-radio" type="radio" name="rm-view" id="rm-view-method" aria-describedby="rm-view-name">
+  <span id="rm-view-name" hidden>Research map view</span>
 
-      <div class="themes">
-        <article class="theme">
-          <h3>Causal structure learning for real clinical data</h3>
-          <p>Rehabilitation cohorts are small and mixed-type, with gaps that mean something and causes that were never recorded. I develop structure-learning methods that admit latent confounders and mixed variables — including a predictive permutation conditional independence test — and use the learned graph as both explanation and feature selector. Applied to hospital-acquired pressure-injury risk in spinal cord injury, this reached a nested AUROC of 0.952; causal fusion then lets small, mismatched cohorts inform one another about structure rather than about patients.</p>
-          <div class="outputs">
-            <span class="chip">Scientific Reports 2024</span>
-            <span class="chip">Causal fusion</span>
-            <span class="chip">Wound microbiome</span>
-          </div>
-        </article>
-        <article class="theme">
-          <h3>Interpretable-by-design temporal models</h3>
-          <p>Post-hoc explanations of clinical time-series models are unstable and often disagree with one another. GARLIC predicts intensive-care outcomes from irregular, incomplete trajectories, and its own attention weights and learned graph edges <i>are</i> the explanation — passing faithfulness tests that the interpretable baselines fail, while outperforming the baselines tested on three ICU benchmarks.</p>
-          <div class="outputs">
-            <span class="chip">GARLIC · ICLR 2026</span>
-          </div>
-        </article>
-        <article class="theme">
-          <h3>Simulation and known-truth evaluation</h3>
-          <p>No architecture can validate a counterfactual claim against a record that never contains one. KarmaTS makes discrete-time causal processes executable, so temporal methods can be graded against dynamics that are known because someone wrote them down. ICare-DT writes matched counterfactuals onto real intensive-care histories, letting treatment-effect estimates be scored against a known answer — cutting error by more than an order of magnitude versus the naive factual contrast. This line continues at Oxford in simulation-based pre-training for robust prediction models.</p>
-          <div class="outputs">
-            <span class="chip">KarmaTS · ML4H 2025</span>
-            <span class="chip">ICare-DT</span>
-          </div>
-        </article>
-        <article class="theme">
-          <h3>Decision-making under uncertainty in the laboratory</h3>
-          <p>The same causal ideas steer experiments. BioBO brings biology-informed priors — from gene embeddings and enrichment analysis — into Bayesian optimization for perturbation design, letting prior beliefs guide exploration while their influence fades as evidence arrives, under a bound that limits what a wrong belief can cost. Developed during my internship at Johnson &amp; Johnson Innovative Medicine and evaluated on the GeneDisco CRISPR benchmarks.</p>
-          <div class="outputs">
-            <span class="chip">BioBO · ICLR 2026</span>
-          </div>
-        </article>
+  <div class="rm-head">
+    <div class="rm-switch">
+      <label for="rm-view-journey">Along the patient journey</label>
+      <label for="rm-view-method">By method</label>
+    </div>
+    <ul class="rm-rq" aria-label="Research questions">
+      <li><b class="rm-q1">RQ1</b>represent &#183; Part I</li>
+      <li><b class="rm-q2">RQ2</b>predict &#183; Part II</li>
+      <li><b class="rm-q3">RQ3</b>act &#183; Part III</li>
+      <li><b class="rm-q4">RQ4</b>personalise &#183; ICare-DT</li>
+    </ul>
+  </div>
+  <p class="rm-hint" aria-hidden="true">Scroll sideways for the whole map &rarr;</p>
+
+  <!-- View 1 · Along the patient journey -->
+  <div class="rm-panel rm-panel-journey">
+    <div class="rm-scroll">
+      <div class="rm-canvas">
+        <svg class="rm-art" viewBox="0 0 840 374" role="img" aria-label="Seven studies along the patient journey, from injury through acute care, rehabilitation and home to follow-up, in three parts that answer research questions 1 to 3: represent, predict and act. Part I, Snapshot: HAPI and PI Fusion sit under acute care, Microbiome under rehabilitation. Part II, Signal: GARLIC sits under acute care; KarmaTS is synthetic, with no patient data. Part III, Action: ICare-DT, which also answers RQ4 (personalise), sits under acute care; BioBO sits under home, the stage its question addresses, though its data are laboratory CRISPR screens. HAPI shares structure with PI Fusion; PI Fusion zooms in on the wound bed in Microbiome; an attention-steering link runs from PI Fusion, which steers a frozen tabular foundation model, to GARLIC, whose attention is its explanation; KarmaTS is the known-truth yardstick for temporal graphs such as GARLIC's; GARLIC's temporal state and forecasts and KarmaTS's known-truth approach lead into ICare-DT; a candidate-targets link from Microbiome to BioBO marks a prospective connection. No study sits under follow-up yet.">
+          <defs>
+            <marker id="rm-j-ah1" class="rm-mk1" viewBox="0 0 10.5 9" refX="7.5" refY="4.5" markerWidth="10.5" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10.5 4.5L0 9z"/></marker>
+            <marker id="rm-j-ah2" class="rm-mk2" viewBox="0 0 10.5 9" refX="7.5" refY="4.5" markerWidth="10.5" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10.5 4.5L0 9z"/></marker>
+            <marker id="rm-j-ah3" class="rm-mk3" viewBox="0 0 10.5 9" refX="7.5" refY="4.5" markerWidth="10.5" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10.5 4.5L0 9z"/></marker>
+          </defs>
+
+          <!-- timeline of the patient journey -->
+          <g class="rm-track">
+            <line class="rm-s4" x1="150" y1="20" x2="332" y2="20"/>
+            <line class="rm-s1" x1="332" y1="20" x2="684" y2="20"/>
+            <line class="rm-s2" x1="684" y1="20" x2="793" y2="20"/>
+          </g>
+          <circle class="rm-f4" cx="150" cy="20" r="13"/>
+          <circle class="rm-f1" cx="332" cy="20" r="13"/>
+          <circle class="rm-f1" cx="548" cy="20" r="13"/>
+          <circle class="rm-f2" cx="684" cy="20" r="13"/>
+          <circle class="rm-f3" cx="793" cy="20" r="13"/>
+          <g class="rm-glyph">
+            <g transform="translate(150 20) scale(.5)"><path d="M0-24V-9M0 9V24" stroke-width="5.5"/><path d="M5.5-11L-5.5 0h11L-5.5 11" stroke-width="5.5"/></g>
+            <g transform="translate(332 20) scale(.5)"><rect x="-21" y="-15" width="42" height="26" rx="4" stroke-width="5"/><path d="M-15-1h8l4-8 5 16 4-10 3 5h6" stroke-width="4"/><path d="M-6 18h12" stroke-width="5"/></g>
+            <g transform="translate(548 20) scale(.5)"><circle cx="-4" cy="10" r="10.5" stroke-width="5"/><path d="M-10-15h10v11h11l5 11" stroke-width="5"/></g>
+            <g transform="translate(684 20) scale(.5)"><path d="M-18-2L0-16 18-2" stroke-width="5"/><path d="M-11-2V16h22V-2" stroke-width="5"/></g>
+            <g transform="translate(793 20) scale(.5)"><path d="M16-10A18 18 0 1 0 18 6" stroke-width="5"/><path d="M6-13L18-11 14 0" stroke-width="5"/><path d="M-1-8V2l8 5" stroke-width="4"/></g>
+          </g>
+          <g class="rm-t-stage rm-mid">
+            <text x="150" y="52">Injury</text>
+            <text x="332" y="52">Acute care</text>
+            <text x="548" y="52">Rehabilitation</text>
+            <text x="684" y="52">Home</text>
+            <text x="793" y="52">Follow-up</text>
+          </g>
+          <g class="rm-t-sub rm-mid">
+            <text x="150" y="68">day 0</text>
+            <text x="332" y="68">days &#8211; weeks</text>
+            <text x="548" y="68">3 &#8211; 6 months</text>
+            <text x="684" y="68">years</text>
+            <text x="793" y="68">decades</text>
+          </g>
+
+          <!-- three lanes: the three parts of the thesis -->
+          <g class="rm-lane">
+            <path d="M2.5 92.5H831.5A8 8 0 0 1 839.5 100.5V171.5A8 8 0 0 1 831.5 179.5H2.5A2 2 0 0 1 .5 177.5V94.5A2 2 0 0 1 2.5 92.5z"/>
+            <path d="M2.5 186.5H831.5A8 8 0 0 1 839.5 194.5V265.5A8 8 0 0 1 831.5 273.5H2.5A2 2 0 0 1 .5 271.5V188.5A2 2 0 0 1 2.5 186.5z"/>
+            <path d="M2.5 280.5H831.5A8 8 0 0 1 839.5 288.5V359.5A8 8 0 0 1 831.5 367.5H2.5A2 2 0 0 1 .5 365.5V282.5A2 2 0 0 1 2.5 280.5z"/>
+          </g>
+          <rect class="rm-f1" x="0" y="92" width="4" height="88" rx="2"/>
+          <rect class="rm-f2" x="0" y="186" width="4" height="88" rx="2"/>
+          <rect class="rm-f3" x="0" y="280" width="4" height="88" rx="2"/>
+          <g class="rm-sep">
+            <line x1="190" y1="86" x2="190" y2="368"/>
+            <line x1="474" y1="86" x2="474" y2="368"/>
+            <line x1="622" y1="86" x2="622" y2="368"/>
+            <line x1="746" y1="86" x2="746" y2="368"/>
+          </g>
+          <text class="rm-t-part rm-tc1" x="16" y="119">PART I</text>
+          <text class="rm-t-lane" x="16" y="139">Snapshot</text>
+          <text class="rm-t-note" x="16" y="157">one row per patient</text>
+          <text class="rm-t-part rm-tc2" x="16" y="213">PART II</text>
+          <text class="rm-t-lane" x="16" y="233">Signal</text>
+          <text class="rm-t-note" x="16" y="251">one stay, over time</text>
+          <text class="rm-t-part rm-tc3" x="16" y="307">PART III</text>
+          <text class="rm-t-lane" x="16" y="327">Action</text>
+          <text class="rm-t-note" x="16" y="345">effects &amp; experiments</text>
+
+          <!-- links between studies (arrow colour = receiving part) -->
+          <path class="rm-arrow rm-s1" d="M312 136H349.5" marker-end="url(#rm-j-ah1)"/>
+          <path class="rm-arrow rm-s1" d="M456 136H493.5" marker-end="url(#rm-j-ah1)"/>
+          <path class="rm-arrow rm-s2" d="M404 150V183H260V213.5" marker-end="url(#rm-j-ah2)"/>
+          <path class="rm-arrow rm-s2" d="M352 230H314.5" marker-end="url(#rm-j-ah2)"/>
+          <path class="rm-arrow rm-s3" d="M260 244V307.5" marker-end="url(#rm-j-ah3)"/>
+          <path class="rm-arrow rm-s3" d="M366 244V277H260"/>
+          <circle class="rm-f3" cx="260" cy="277" r="3"/>
+          <path class="rm-arrow rm-s3" d="M548 150V242H684V307.5" marker-end="url(#rm-j-ah3)"/>
+          <g class="rm-t-lbl">
+            <text class="rm-mid" x="332" y="114">structure shared</text>
+            <text class="rm-mid" x="541" y="114">zoom in: wound bed</text>
+            <text class="rm-mid" x="332" y="172">attention steering</text>
+            <text class="rm-mid" x="332" y="208">yardstick</text>
+            <text class="rm-mid" x="404" y="264">synthetic</text>
+            <text x="270" y="302">state &#183; forecast &#183; known truth</text>
+            <text class="rm-mid" x="616" y="232">candidate targets</text>
+          </g>
+        </svg>
+
+        <svg class="rm-links" viewBox="0 0 840 374" role="group" aria-label="Studies on the journey map">
+          <defs>
+            <linearGradient id="rm-j-split" x1="0" y1="0" x2="1" y2="0"><stop class="rm-stop3" offset=".5"/><stop class="rm-stop4" offset=".5"/></linearGradient>
+          </defs>
+          <a class="rm-pill rm-c1" href="#proj-hapi"><rect class="rm-halo" x="204.5" y="118.5" width="111" height="35" rx="17.5"/><rect class="rm-body" x="208" y="122" width="104" height="28" rx="14"/><text class="rm-ptxt" x="260" y="141">HAPI</text></a>
+          <a class="rm-pill rm-c1" href="#proj-fusion"><rect class="rm-halo" x="348.5" y="118.5" width="111" height="35" rx="17.5"/><rect class="rm-body" x="352" y="122" width="104" height="28" rx="14"/><text class="rm-ptxt" x="404" y="141">PI Fusion</text></a>
+          <a class="rm-pill rm-c1" href="#proj-microbiome"><rect class="rm-halo" x="492.5" y="118.5" width="111" height="35" rx="17.5"/><rect class="rm-body" x="496" y="122" width="104" height="28" rx="14"/><text class="rm-ptxt" x="548" y="141">Microbiome</text></a>
+          <a class="rm-pill rm-c2" href="#proj-garlic"><rect class="rm-halo" x="204.5" y="212.5" width="111" height="35" rx="17.5"/><rect class="rm-body" x="208" y="216" width="104" height="28" rx="14"/><text class="rm-ptxt" x="260" y="235">GARLIC</text></a>
+          <a class="rm-pill rm-c2 rm-syn" href="#proj-karmats"><rect class="rm-halo" x="348.5" y="212.5" width="111" height="35" rx="17.5"/><rect class="rm-body" x="352.8" y="216.8" width="102.4" height="26.4" rx="13.2"/><text class="rm-ptxt" x="404" y="235">KarmaTS</text></a>
+          <a class="rm-pill rm-c3 rm-split-j" href="#proj-icaredt"><rect class="rm-halo" x="204.5" y="306.5" width="111" height="35" rx="17.5"/><rect class="rm-body" x="208" y="310" width="104" height="28" rx="14"/><text class="rm-ptxt" x="260" y="329">ICare-DT</text></a>
+          <a class="rm-pill rm-c3" href="#proj-biobo"><rect class="rm-halo" x="628.5" y="306.5" width="111" height="35" rx="17.5"/><rect class="rm-body" x="632" y="310" width="104" height="28" rx="14"/><text class="rm-ptxt" x="684" y="329">BioBO</text></a>
+        </svg>
       </div>
+    </div>
+    <ul class="rm-legend">
+      <li><svg class="rm-sw" viewBox="0 0 28 14" aria-hidden="true"><rect class="rm-f1" x="1" y="1.5" width="26" height="11" rx="5.5"/></svg>a study, under the stage it addresses</li>
+      <li><svg class="rm-sw" viewBox="0 0 28 14" aria-hidden="true"><path class="rm-sw-line" d="M1 7H20"/><path class="rm-sw-head" d="M18 3L27 7L18 11z"/></svg>how one study leads into the next</li>
+      <li><svg class="rm-sw" viewBox="0 0 28 14" aria-hidden="true"><rect class="rm-sw-dash" x="1.75" y="2.25" width="24.5" height="9.5" rx="4.75"/></svg>synthetic &#8212; no patient data</li>
+      <li><svg class="rm-sw" viewBox="0 0 28 14" aria-hidden="true"><path class="rm-f3" d="M6.5 1.5H14V12.5H6.5A5.5 5.5 0 0 1 6.5 1.5z"/><path class="rm-f4" d="M14 1.5H21.5A5.5 5.5 0 0 1 21.5 12.5H14z"/></svg>split colour &#8212; also answers RQ4, personalise</li>
+    </ul>
+  </div>
+
+  <!-- View 2 · By method -->
+  <div class="rm-panel rm-panel-method">
+    <div class="rm-scroll">
+      <div class="rm-canvas">
+        <svg class="rm-art" viewBox="0 0 840 368" role="img" aria-label="The same seven studies by method, with a thread joining the studies that share each method. Graphical models: HAPI, PI Fusion, Microbiome, GARLIC and KarmaTS. Causal discovery: HAPI, PI Fusion and KarmaTS. Foundation models: PI Fusion and ICare-DT. Attention: PI Fusion and GARLIC. Causal effects: KarmaTS, ICare-DT and BioBO. Data fusion: PI Fusion and BioBO.">
+          <g class="rm-t-head rm-mid">
+            <text x="392" y="18">Graphical</text><text x="392" y="34">models</text>
+            <text x="474" y="18">Causal</text><text x="474" y="34">discovery</text>
+            <text x="556" y="18">Foundation</text><text x="556" y="34">models</text>
+            <text x="638" y="26">Attention</text>
+            <text x="720" y="18">Causal</text><text x="720" y="34">effects</text>
+            <text x="802" y="18">Data</text><text x="802" y="34">fusion</text>
+          </g>
+          <line class="rm-rule" x1="352" y1="46.5" x2="840" y2="46.5"/>
+
+          <rect class="rm-f1" x="0" y="60" width="4" height="124" rx="2"/>
+          <rect class="rm-f2" x="0" y="192" width="4" height="80" rx="2"/>
+          <rect class="rm-f3" x="0" y="280" width="4" height="80" rx="2"/>
+
+          <g class="rm-t-d1">
+            <text x="132" y="74">causal graph + predictor</text>
+            <text x="132" y="118">fused graphs steer a</text>
+            <text x="132" y="162">sparse statistics + graph</text>
+            <text x="132" y="206">relational learning by</text>
+            <text x="132" y="250">executable causal process</text>
+            <text x="132" y="294">ICU FM + gated adaptation</text>
+            <text x="132" y="338">multimodal Bayesian optimisation</text>
+          </g>
+          <g class="rm-t-d2">
+            <text x="132" y="90">one tabular cohort</text>
+            <text x="132" y="134">tabular FM &#183; two cohorts</text>
+            <text x="132" y="178">16S wound profiles</text>
+            <text x="132" y="222">graph attention &#183; ICU</text>
+            <text x="132" y="266">synthetic ground truth</text>
+            <text x="132" y="310">+ causal readout</text>
+            <text x="132" y="354">with a biology-informed prior</text>
+          </g>
+
+          <!-- method not used (off-thread cells) -->
+          <g class="rm-empty">
+            <circle cx="392" cy="298" r="2.4"/><circle cx="392" cy="342" r="2.4"/>
+            <circle cx="474" cy="298" r="2.4"/><circle cx="474" cy="342" r="2.4"/>
+            <circle cx="556" cy="78" r="2.4"/><circle cx="556" cy="342" r="2.4"/>
+            <circle cx="638" cy="78" r="2.4"/><circle cx="638" cy="254" r="2.4"/><circle cx="638" cy="298" r="2.4"/><circle cx="638" cy="342" r="2.4"/>
+            <circle cx="720" cy="78" r="2.4"/><circle cx="720" cy="122" r="2.4"/><circle cx="720" cy="166" r="2.4"/><circle cx="720" cy="210" r="2.4"/>
+            <circle cx="802" cy="78" r="2.4"/>
+          </g>
+          <!-- threads: one method, study to study -->
+          <g class="rm-thread">
+            <line x1="392" y1="78" x2="392" y2="254"/>
+            <line x1="474" y1="78" x2="474" y2="254"/>
+            <line x1="556" y1="122" x2="556" y2="298"/>
+            <line x1="638" y1="122" x2="638" y2="210"/>
+            <line x1="720" y1="254" x2="720" y2="342"/>
+            <line x1="802" y1="122" x2="802" y2="342"/>
+          </g>
+          <!-- method used -->
+          <g class="rm-dot">
+            <circle class="rm-f1" cx="392" cy="78" r="7"/><circle class="rm-f1" cx="392" cy="122" r="7"/><circle class="rm-f1" cx="392" cy="166" r="7"/><circle class="rm-f2" cx="392" cy="210" r="7"/><circle class="rm-f2" cx="392" cy="254" r="7"/>
+            <circle class="rm-f1" cx="474" cy="78" r="7"/><circle class="rm-f1" cx="474" cy="122" r="7"/><circle class="rm-f2" cx="474" cy="254" r="7"/>
+            <circle class="rm-f1" cx="556" cy="122" r="7"/><circle class="rm-f3" cx="556" cy="298" r="7"/>
+            <circle class="rm-f1" cx="638" cy="122" r="7"/><circle class="rm-f2" cx="638" cy="210" r="7"/>
+            <circle class="rm-f2" cx="720" cy="254" r="7"/><circle class="rm-f3" cx="720" cy="298" r="7"/><circle class="rm-f3" cx="720" cy="342" r="7"/>
+            <circle class="rm-f1" cx="802" cy="122" r="7"/><circle class="rm-f3" cx="802" cy="342" r="7"/>
+          </g>
+        </svg>
+
+        <svg class="rm-links" viewBox="0 0 840 368" role="group" aria-label="Studies by method">
+          <defs>
+            <linearGradient id="rm-m-split" x1="0" y1="0" x2="1" y2="0"><stop class="rm-stop3" offset=".5"/><stop class="rm-stop4" offset=".5"/></linearGradient>
+          </defs>
+          <a class="rm-pill rm-c1" href="#proj-hapi" aria-label="HAPI: causal graph + predictor, one tabular cohort"><rect class="rm-halo" x="10.5" y="60.5" width="111" height="35" rx="17.5"/><rect class="rm-body" x="14" y="64" width="104" height="28" rx="14"/><text class="rm-ptxt" x="66" y="83">HAPI</text></a>
+          <a class="rm-pill rm-c1" href="#proj-fusion" aria-label="PI Fusion: fused graphs steer a tabular foundation model, two cohorts"><rect class="rm-halo" x="10.5" y="104.5" width="111" height="35" rx="17.5"/><rect class="rm-body" x="14" y="108" width="104" height="28" rx="14"/><text class="rm-ptxt" x="66" y="127">PI Fusion</text></a>
+          <a class="rm-pill rm-c1" href="#proj-microbiome" aria-label="Microbiome: sparse statistics + graph, 16S wound profiles"><rect class="rm-halo" x="10.5" y="148.5" width="111" height="35" rx="17.5"/><rect class="rm-body" x="14" y="152" width="104" height="28" rx="14"/><text class="rm-ptxt" x="66" y="171">Microbiome</text></a>
+          <a class="rm-pill rm-c2" href="#proj-garlic" aria-label="GARLIC: relational learning by graph attention, ICU"><rect class="rm-halo" x="10.5" y="192.5" width="111" height="35" rx="17.5"/><rect class="rm-body" x="14" y="196" width="104" height="28" rx="14"/><text class="rm-ptxt" x="66" y="215">GARLIC</text></a>
+          <a class="rm-pill rm-c2 rm-syn" href="#proj-karmats" aria-label="KarmaTS: executable causal process, synthetic ground truth"><rect class="rm-halo" x="10.5" y="236.5" width="111" height="35" rx="17.5"/><rect class="rm-body" x="14.8" y="240.8" width="102.4" height="26.4" rx="13.2"/><text class="rm-ptxt" x="66" y="259">KarmaTS</text></a>
+          <a class="rm-pill rm-c3 rm-split-m" href="#proj-icaredt" aria-label="ICare-DT: ICU foundation model + gated adaptation + causal readout"><rect class="rm-halo" x="10.5" y="280.5" width="111" height="35" rx="17.5"/><rect class="rm-body" x="14" y="284" width="104" height="28" rx="14"/><text class="rm-ptxt" x="66" y="303">ICare-DT</text></a>
+          <a class="rm-pill rm-c3" href="#proj-biobo" aria-label="BioBO: multimodal Bayesian optimisation with a biology-informed prior"><rect class="rm-halo" x="10.5" y="324.5" width="111" height="35" rx="17.5"/><rect class="rm-body" x="14" y="328" width="104" height="28" rx="14"/><text class="rm-ptxt" x="66" y="347">BioBO</text></a>
+        </svg>
+      </div>
+    </div>
+    <ul class="rm-legend">
+      <li><span class="rm-key rm-k1" aria-hidden="true"></span>Part I &#183; Snapshot</li>
+      <li><span class="rm-key rm-k2" aria-hidden="true"></span>Part II &#183; Signal</li>
+      <li><span class="rm-key rm-k3" aria-hidden="true"></span>Part III &#183; Action</li>
+      <li><span class="rm-key rm-kt" aria-hidden="true"></span>a thread &#8212; the same method, study to study</li>
+    </ul>
+  </div>
+
+  <figcaption>
+    <span class="rm-cap-journey">Seven studies along the patient journey, each placed under the stage its question addresses (KarmaTS is synthetic, and BioBO's data are laboratory CRISPR screens); the arrows show how one study leads into the next. No study sits under follow-up yet, because no dataset covers those decades.</span>
+    <span class="rm-cap-method">The same seven studies, read by method: a dot marks the methods each study builds on or contributes to, and a thread joins the studies that share it. Two ideas run through all of them &#8212; explanation built into the structure, and causality.</span>
+  </figcaption>
+</figure>
+
+      <div class="proj-groups">
+        <div class="proj-group p1">
+          <div class="proj-group-head"><h3>Part I · Snapshot</h3><p>Inspectable risk structure, one row per patient</p></div>
+          <div class="projects">
+          <article class="proj p1" id="proj-hapi">
+            <a class="proj-fig" href="assets/research/hapi-panel.png" data-lightbox data-caption="HAPI: problem, method and main results (from my PhD defense, September 2026). The ROC curves come from a single held-out split; 0.952 is the nested cross-validation AUROC." data-w="2712" data-h="1132" data-alt="Problem: pressure injury is staged 1 to 4 by depth and becomes visible only once damage is done; today's risk forms give a static score with no reason. Method: mixed-type data from 250 patients are tested with PPCIT, a graph is learned with FCI and expert time tiers, its Markov blanket picks the features for an ensemble risk score, and the readable graph stays open to argument. Results: SCIM, albumin, FIMc and AIS point to hospital-acquired pressure injury, which points to length of stay, with nutrition marked as a shared cause; ROC curves labelled AUROC 0.952, and 0.925 balanced accuracy with early features alone. Limitation: single centre; edges are hypotheses, not facts.">
+              <img src="assets/research/hapi-method.png" alt="HAPI method: mixed-type data from 250 patients are tested with PPCIT, a graph is learned with FCI and expert time tiers, its Markov blanket picks the features for an ensemble risk score, and the readable graph stays open to argument." width="894" height="726" loading="lazy" decoding="async">
+              <span class="proj-zoom">Problem · method · results</span>
+            </a>
+            <div class="proj-body">
+              <div class="proj-meta"><span class="proj-part">Part I · Snapshot</span><span class="chip">Sci. Rep. 2024</span></div>
+              <h4>HAPI</h4>
+              <p class="proj-headline">Risk flagged upstream&nbsp;— <span class="hl">with a graph you can argue with</span></p>
+              <p class="proj-summary">After spinal cord injury, a pressure injury becomes visible only once the damage is done, and today's risk forms give a score with no reason. Mixed-variable graphical modelling learns a causal graph of the risk factors from 250 patients, with clinicians' timeline orienting the arrows, and predicts from that graph. The readable graph costs nothing in accuracy; its edges are hypotheses to argue with, not facts.</p>
+              <ul class="proj-stats"><li>AUROC 0.952 with the full Markov blanket (nested CV)</li><li>Admission-time features alone: balanced accuracy 0.925 (held-out split)</li></ul>
+              <div class="proj-links"><a href="https://www.nature.com/articles/s41598-024-75691-9">Paper</a></div>
+            </div>
+          </article>
+          <article class="proj p1" id="proj-fusion">
+            <a class="proj-fig" href="assets/research/fusion-panel.png" data-lightbox data-caption="PI Fusion: problem, method and main results (from my PhD defense, September 2026)" data-w="2712" data-h="1132" data-alt="Problem: what drives complications after pressure-injury surgery, when the hospital-acquired cohort (250 patients) and the surgical cohort (266 episodes) are each too small to learn a graph alone? Method: a shared graph over the variables both cohorts measure constrains each cohort's own graph, imputation repeats, and the graph biases the attention of a frozen tabular foundation model. Results: age, albumin and haemoglobin are shared ancestors of length of stay in both cohorts; held-out AUROC of the graph-selected set (6 to 50 features) against all 75 features is 0.894 vs 0.894 for urinary tract infection, 0.848 vs 0.902 for osteomyelitis and 0.776 vs 0.752 for secondary pressure injury. Limitation: one centre, so transfer is across care stages, not sites; steering is version-specific.">
+              <img src="assets/research/fusion-method.png" alt="PI Fusion method: the HAPI and PPIS cohorts learn a shared graph that constrains each cohort-specific graph; re-imputation repeats, and the graph biases the attention of a frozen tabular foundation model." width="894" height="772" loading="lazy" decoding="async">
+              <span class="proj-zoom">Problem · method · results</span>
+            </a>
+            <div class="proj-body">
+              <div class="proj-meta"><span class="proj-part">Part I · Snapshot</span><span class="chip">npj AI · submitted</span></div>
+              <h4>PI Fusion</h4>
+              <p class="proj-headline">Two small cohorts&nbsp;— <span class="hl">share structure, never parameters</span></p>
+              <p class="proj-summary">Surgeons want to know what drives complications after a pressure injury is repaired, yet each cohort (250 acute-care patients; 266 surgical episodes from 174 patients) is too small to learn a reliable graph alone. Causal graph fusion shares structure, never parameters: a graph over the shared variables constrains each cohort's graph and steers a frozen tabular foundation model. A compact graph-selected feature set predicts complications about as well as all 75 features.</p>
+              <ul class="proj-stats"><li>Age, albumin, haemoglobin → length of stay in both cohorts</li><li>Compact graph set ≈ all 75 features (held-out AUROC)</li><li>Graph F1 0.62 → 0.70 against synthetic known truth</li></ul>
+            </div>
+          </article>
+          <article class="proj p1" id="proj-microbiome">
+            <a class="proj-fig" href="assets/research/microbiome-panel.png" data-lightbox data-caption="Wound microbiome: problem, method and main results (from my PhD defense, September 2026)" data-w="2712" data-h="1040" data-alt="Problem: two wounds alike in stage, size, site and care take opposite courses over the following months, and a culture report names one organism while a chronic wound hosts a whole community. Method: 16S rRNA profiles of 55 wounds, healing versus non-healing, read through three lenses: differential abundance (anaerobic genera enriched, about twice the burden), model attribution (the same genera rank top) and co-abundance centrality (anaerobes are the hubs). Results: a candidate signature of seven genera, Anaerococcus, Peptoniphilus, Finegoldia, Ezakiella, Prevotella, Proteus and Pseudomonas, whose summed burden score is about as good as the full classifier. Limitation: the lenses are analytically distinct, not statistically independent; one small pooled cohort; prospective validation first.">
+              <img src="assets/research/microbiome-method.png" alt="Microbiome method: 55 wounds profiled by 16S rRNA sequencing, healed versus non-healing, read through three lenses: differential abundance, model attribution and co-abundance centrality." width="894" height="875" loading="lazy" decoding="async">
+              <span class="proj-zoom">Problem · method · results</span>
+            </a>
+            <div class="proj-body">
+              <div class="proj-meta"><span class="proj-part">Part I · Snapshot</span><span class="chip">Sci. Rep. · under review</span></div>
+              <h4>Wound microbiome</h4>
+              <p class="proj-headline">Same care, opposite outcomes&nbsp;— <span class="hl">does the wound's community explain why?</span></p>
+              <p class="proj-summary">Two pressure wounds can match in stage, size, site and care, yet months later one has improved and the other has stalled or worsened. Three analytically distinct methods, applied to 16S rRNA profiles of 55 wounds, test whether the bacterial community explains healing. All three agree: anaerobic genera are enriched in wounds that fail to improve, and a burden score over seven genera discriminates about as well as the full classifier, pending prospective validation.</p>
+              <ul class="proj-stats"><li>Anaerobic burden ≈2× in poorly healing wounds, <span class="nowrap">p = 0.002</span></li><li>Anaerobes are the network hubs (top hub degree 0.87)</li><li>7-genus burden score ≈ gradient-boosted classifier</li></ul>
+            </div>
+          </article>
+          <article class="proj prel" id="proj-gait">
+            <div class="proj-fig proj-fig-static">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 620" width="600" height="620" style="width:100%;height:auto;display:block" role="img" aria-label="Method: one side-view video of a person walking is fitted with a 3D body mesh; virtual markers on the mesh drive an anthropometrically scaled OpenSim model, that gives lower-body joint kinematics, from which ground reaction forces are predicted. In 239 adults with spinal cord injury these agree with motion capture (r 0.68 to 0.90) and force plates (r 0.85 to 0.87); a Markov-blanket analysis links waveform features to functional independence." font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="gait-ak" markerWidth="10" markerHeight="10" refX="7" refY="5" orient="auto" overflow="visible"><path d="M1,1.5 L8,5 L1,8.5 Z" fill="#3A3733"/></marker>
+    <marker id="gait-ag" markerWidth="10" markerHeight="10" refX="7" refY="5" orient="auto" overflow="visible"><path d="M1,1.5 L8,5 L1,8.5 Z" fill="#B5AFA6"/></marker>
+    <marker id="gait-as" markerWidth="10" markerHeight="10" refX="7" refY="5" orient="auto" overflow="visible"><path d="M1,1.5 L8,5 L1,8.5 Z" fill="#537578"/></marker>
+    <pattern id="gait-mesh" width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" fill="#E2EBEB"/><path d="M0 0.5 H9 M0.5 0 V9 M0 9 L9 0" fill="none" stroke="#A3BABC" stroke-width="1"/></pattern>
+    <pattern id="gait-meshb" width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" fill="#C9D8D9"/><path d="M0 0.5 H9 M0.5 0 V9 M0 9 L9 0" fill="none" stroke="#93ACAE" stroke-width="1"/></pattern>
+  </defs>
+  <rect width="600" height="620" fill="#fff"/>
+
+  
+  <rect x="20" y="18" width="239" height="42" rx="21" fill="#F4F2EE" stroke="#E2DED7" stroke-width="2"/>
+  <text x="36" y="47" font-size="24" fill="#3A3733"><tspan font-weight="700">239</tspan> adults with SCI</text>
+
+  
+  <g font-size="24" font-weight="700" text-anchor="middle">
+    <text x="100" y="98" fill="#3A3733">one camera</text>
+    <text x="300" y="98" fill="#537578">body mesh</text>
+    <text x="500" y="98" fill="#3A3733">scaled model</text>
+  </g>
+  <g font-size="22" fill="#6B6762">
+    <text x="100" y="123" text-anchor="middle">side view</text>
+    <circle cx="224" cy="116.5" r="5" fill="#A2635C"/>
+    <text x="236" y="123">virtual markers</text>
+    <text x="500" y="123" text-anchor="middle">OpenSim</text>
+  </g>
+
+  
+  <path d="M38 156 V138 H56 M144 138 H162 V156 M38 288 V306 H56 M144 306 H162 V288" fill="none" stroke="#6B6762" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M54 297 H146 M254 297 H346 M454 297 H540" stroke="#E2DED7" stroke-width="2" stroke-linecap="round"/>
+  <g transform="translate(100 294)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M0 -70 L-9 -38 L-30.2 -12.7 L-15 -3" stroke="#B5AFA6" stroke-width="10.5"/>
+    <path d="M2 -106 L11 -84 L27 -71" stroke="#B5AFA6" stroke-width="8.5"/>
+    <path d="M0 -70 L2 -106" stroke="#3A3733" stroke-width="15"/>
+    <path d="M0 -70 L11 -39 L19 -7 L33 -4" stroke="#3A3733" stroke-width="10.5"/>
+    <path d="M2 -106 L-11 -85 L-17 -64" stroke="#3A3733" stroke-width="8.5"/>
+    <circle cx="5" cy="-130" r="10.5" fill="#3A3733"/>
+  </g>
+
+  
+  <g transform="translate(300 294)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <g stroke="#537578">
+      <path d="M0 -70 L-9 -38 L-30.2 -12.7 L-15 -3" stroke-width="15.5"/>
+      <path d="M2 -106 L11 -84 L27 -71" stroke-width="13.5"/>
+      <path d="M0 -70 L2 -106" stroke-width="20"/>
+      <path d="M0 -70 L11 -39 L19 -7 L33 -4" stroke-width="15.5"/>
+      <path d="M2 -106 L-11 -85 L-17 -64" stroke-width="13.5"/>
+    </g>
+    <circle cx="5" cy="-130" r="13" fill="#537578"/>
+    <g stroke="url(#gait-meshb)">
+      <path d="M0 -70 L-9 -38 L-30.2 -12.7 L-15 -3" stroke-width="10.5"/>
+      <path d="M2 -106 L11 -84 L27 -71" stroke-width="8.5"/>
+    </g>
+    <g stroke="url(#gait-mesh)">
+      <path d="M0 -70 L2 -106" stroke-width="15"/>
+      <path d="M0 -70 L11 -39 L19 -7 L33 -4" stroke-width="10.5"/>
+      <path d="M2 -106 L-11 -85 L-17 -64" stroke-width="8.5"/>
+    </g>
+    <circle cx="5" cy="-130" r="10.5" fill="url(#gait-mesh)"/>
+    <g fill="#A2635C" stroke="#fff" stroke-width="2">
+      <circle cx="2" cy="-106" r="5"/><circle cx="0" cy="-70" r="5"/><circle cx="11" cy="-39" r="5"/><circle cx="19" cy="-7" r="5"/><circle cx="33" cy="-4" r="5"/><circle cx="-9" cy="-38" r="5"/><circle cx="-30.2" cy="-12.7" r="5"/>
+    </g>
+  </g>
+
+  
+  <g transform="translate(500 294)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M0 -70 L-9 -38 L-30.2 -12.7 L-15 -3" stroke="#B5AFA6" stroke-width="4"/>
+    <path d="M2 -106 L11 -84 L27 -71" stroke="#B5AFA6" stroke-width="3.5"/>
+    <path d="M0 -70 L4 -119" stroke="#3A3733" stroke-width="4"/>
+    <path d="M0 -70 L11 -39 L19 -7 L33 -4" stroke="#3A3733" stroke-width="4.5"/>
+    <path d="M2 -106 L-11 -85 L-17 -64" stroke="#3A3733" stroke-width="3.5"/>
+    <circle cx="5" cy="-130" r="10" fill="#fff" stroke="#3A3733" stroke-width="2.5"/>
+    <g fill="#A2635C" stroke="#fff" stroke-width="2">
+      <circle cx="2" cy="-106" r="5"/><circle cx="0" cy="-70" r="5"/><circle cx="11" cy="-39" r="5"/><circle cx="19" cy="-7" r="5"/><circle cx="33" cy="-4" r="5"/><circle cx="-9" cy="-38" r="5"/><circle cx="-30.2" cy="-12.7" r="5"/>
+    </g>
+  </g>
+  <g fill="none" stroke="#B5AFA6" stroke-width="2.5" stroke-linecap="round">
+    <path d="M549 153 H563 M549 295 H563"/>
+    <path d="M556 224 V159" marker-end="url(#gait-ag)"/>
+    <path d="M556 224 V289" marker-end="url(#gait-ag)"/>
+  </g>
+
+  
+  <g fill="none" stroke="#3A3733" stroke-width="3" stroke-linecap="round" marker-end="url(#gait-ak)">
+    <path d="M172 224 H266"/>
+    <path d="M344 224 H472"/>
+    <path d="M500 308 V336"/>
+  </g>
+  <g font-size="22" font-style="italic" fill="#6B6762" text-anchor="middle">
+    <text x="219" y="213">fit</text>
+    <text x="408" y="213">drive</text>
+  </g>
+
+  
+  <rect x="20" y="344" width="560" height="102" rx="12" fill="#F4F2EE"/>
+  <g font-size="22" fill="#6B6762">
+    <text x="36" y="369">hip</text>
+    <text x="146" y="369">knee</text>
+    <text x="256" y="369">ankle</text>
+    <text x="382" y="369">ground force</text>
+  </g>
+  <path d="M365 358 V430" stroke="#E2DED7" stroke-width="2"/>
+  <g fill="none" stroke="#D6CFC5" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M36.0 387.2C50.7 387.2 66.4 423.2 84.8 425.6C97.6 427.0 103.2 381.4 115.1 381.4C121.6 381.4 125.2 385.3 128.0 386.2"/>
+    <path d="M146.0 426.1C151.5 426.1 155.2 415.5 160.7 415.5C167.2 415.5 172.7 427.0 182.8 426.6C192.9 426.1 203.0 380.0 213.2 380.0C223.3 380.0 228.8 426.1 238.0 426.1"/>
+    <path d="M256.0 401.6C259.7 401.6 261.5 407.4 266.1 406.4C275.3 404.5 291.0 389.1 300.2 391.0C305.7 392.5 308.4 428.0 314.9 427.0C320.4 426.1 323.2 402.6 328.7 402.6C336.0 402.6 342.5 403.0 348.0 403.0"/>
+    <path d="M382.0 428.0C391.1 399.2 402.0 381.9 420.2 381.9C438.4 381.9 451.2 392.0 473.0 392.0C494.8 392.0 507.6 381.4 525.8 381.4C544.0 381.4 554.9 404.0 564.0 428.0"/>
+  </g>
+  <g fill="none" stroke="#537578" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M36.0 389.6C49.8 389.6 66.4 425.1 83.8 423.2C96.7 421.8 102.2 382.4 116.0 383.4C122.5 383.8 125.2 387.2 128.0 388.6"/>
+    <path d="M146.0 424.2C151.5 424.2 155.2 411.7 160.7 411.7C167.2 411.7 172.7 425.6 182.8 425.1C192.9 424.6 202.1 381.9 212.2 381.9C222.4 381.9 228.8 424.2 238.0 424.2"/>
+    <path d="M256.0 404.0C259.7 404.0 261.5 410.7 266.1 409.8C275.3 407.8 291.0 392.5 299.2 394.4C304.8 395.8 307.5 426.1 314.0 425.1C319.5 424.2 322.2 404.0 327.8 404.0C335.1 404.0 342.5 405.0 348.0 405.0"/>
+    <path d="M382.0 428.0C392.9 401.6 403.8 380.0 422.0 380.0C440.2 380.0 451.2 394.4 473.0 394.4C494.8 394.4 505.8 380.0 524.0 380.0C542.2 380.0 553.1 401.6 564.0 428.0"/>
+  </g>
+
+  
+  <g text-anchor="middle">
+    <text x="192" y="478" font-size="24" font-weight="700" fill="#5F774F"><tspan font-style="italic">r</tspan> 0.68–0.90</text>
+    <text x="473" y="478" font-size="24" font-weight="700" fill="#5F774F"><tspan font-style="italic">r</tspan> 0.85–0.87</text>
+    <text x="192" y="503" font-size="22" fill="#6B6762">vs motion capture</text>
+    <text x="473" y="503" font-size="22" fill="#6B6762">vs force plates</text>
+  </g>
+
+  
+  <path d="M84 450 V526" fill="none" stroke="#3A3733" stroke-width="3" stroke-linecap="round" marker-end="url(#gait-ak)"/>
+  <rect x="20" y="532" width="128" height="60" rx="12" fill="none" stroke="#5F774F" stroke-width="2.5" stroke-dasharray="6 5"/>
+  <g fill="none" stroke="#537578" stroke-width="2.5" stroke-linecap="round" marker-end="url(#gait-as)">
+    <path d="M41 558 L73 547"/><path d="M41 566 L73 577"/><path d="M91 547 L123 558"/><path d="M91 577 L123 566"/>
+  </g>
+  <g fill="#537578"><circle cx="32" cy="562" r="9"/><circle cx="82" cy="544" r="9"/><circle cx="82" cy="580" r="9"/></g>
+  <circle cx="132" cy="562" r="9" fill="#3A3733"/>
+  <text x="164" y="556" font-size="24" font-weight="700" fill="#5F774F">Markov blanket</text>
+  <text x="164" y="583" font-size="22" fill="#6B6762">of functional independence</text>
+</svg>
+            </div>
+            <div class="proj-body">
+              <div class="proj-meta"><span class="proj-part">Related · Rehabilitation</span><span class="chip">arXiv 2026</span></div>
+              <h4>Markerless gait</h4>
+              <p class="proj-headline">Few clinics have motion capture&nbsp;— <span class="hl">gait biomechanics from a single video</span></p>
+              <p class="proj-summary">Gait analysis guides rehabilitation after spinal cord injury, but it relies on motion capture and force plates that few clinics have. On the SCAI SCI Gait dataset (239 adults), a parametric body mesh fitted to a single side-view video drives a scaled OpenSim model. Markerless kinematics agreed with motion capture, predicted ground-reaction forces closely matched force plates, and Markov-blanket graph analysis found waveform components conditionally associated with functional independence.</p>
+              <ul class="proj-stats"><li>Kinematics vs motion capture: <span class="nowrap">r = 0.68–0.90</span></li><li>Ground-reaction forces vs force plates: <span class="nowrap">r = 0.85–0.87</span></li><li>SCAI SCI Gait dataset: 239 adults with SCI</li></ul>
+              <div class="proj-links"><a href="https://arxiv.org/abs/2610.05552">arXiv</a><a href="https://github.com/SCAI-Lab/SCAI-SCI-Gait-Dataset">Dataset</a></div>
+            </div>
+          </article>
+          </div>
+        </div>
+        <div class="proj-group p2">
+          <div class="proj-group-head"><h3>Part II · Signal</h3><p>Forecasts that show their reasons, one stay over time</p></div>
+          <div class="projects">
+          <article class="proj p2" id="proj-garlic">
+            <a class="proj-fig" href="assets/research/garlic-panel.png" data-lightbox data-caption="GARLIC: problem, method and main results (from my PhD defense, September 2026)" data-w="2712" data-h="1132" data-alt="Problem: heart rate, blood pressure, lactate and creatinine are recorded irregularly over 24 hours, and a warning helps only if it comes hours ahead and with its reasons. Method: gaps are treated as information (time since the last reading), a time-lagged dependency graph shows which channel drives which, and cross-dimensional attention gives readable weights; the attention and edges are the explanation, with nothing added afterwards. Results: AUROC against 15 baselines is 86.4 vs 84.9 for the runner-up on P12, 91.0 vs 90.0 on P19 and 90.1 vs 89.2 on MIMIC-III; in one stay, the weight moves to systolic and diastolic blood pressure changing together as the predicted risk of dying rises; remove-and-retrain checks passed: 8 of 8 for GARLIC, 5 of 8 for the baseline. Limitation: dependency structures, not causal graphs; benchmark gains, not demonstrated bedside benefit.">
+              <img src="assets/research/garlic-method.png" alt="GARLIC method: gaps are treated as information, a time-lagged dependency graph shows which channel drives which, and cross-dimensional attention gives readable weights; the attention and edges are the explanation, with nothing added afterwards." width="894" height="610" loading="lazy" decoding="async">
+              <span class="proj-zoom">Problem · method · results</span>
+            </a>
+            <div class="proj-body">
+              <div class="proj-meta"><span class="proj-part">Part II · Signal</span><span class="chip">ICLR 2026</span></div>
+              <h4>GARLIC</h4>
+              <p class="proj-headline">ICU records are irregular&nbsp;— <span class="hl">a forecast that shows its own reasons</span></p>
+              <p class="proj-summary">Intensive-care records are irregular and up to 98 percent empty, and an explanation added afterwards need not be faithful. GARLIC treats gaps as information and learns a time-lagged dependency graph between signals; its attention weights and edges are themselves the explanation. It ranks first on three ICU benchmarks against 15 baselines, and its explanations pass a prespecified remove-and-retrain audit.</p>
+              <ul class="proj-stats"><li>Best AUROC and AUPRC on 3 ICU benchmarks, 15 baselines</li><li>MIMIC-III AUROC 90.1 vs 89.2 for the runner-up</li><li>Remove-and-retrain audit: 8/8 checks vs 5/8 (RETAIN)</li></ul>
+              <div class="proj-links"><a href="https://iclr.cc/virtual/2026/poster/10011543">ICLR</a><a href="https://arxiv.org/abs/2608.10969">arXiv</a><a href="https://github.com/SCAI-Lab/GARLIC">Code</a></div>
+            </div>
+          </article>
+          <article class="proj p2" id="proj-karmats">
+            <a class="proj-fig" href="assets/research/karmats-panel.png" data-lightbox data-caption="KarmaTS: problem, method and main results (from my PhD defense, September 2026)" data-w="2712" data-h="1132" data-alt="Problem: known-truth benchmarks such as random graphs and one-off simulators lack domain realism, while real recordings are realistic but hide the true graph; KarmaTS aims for both. Method: real series go through causal discovery and edge fitting, an expert edits the lagged graph, and the executable process simulates synthetic series with a known graph, with feedback for the expert to refine it. Results: from an expert graph and its simulated series, six discovery algorithms, including PCMCI and CUTS+, are graded on F1 and SID while series length, lag, density and hidden variables vary. Limitation: the benchmarks use template proxy graphs, not yet expert-elicited; no user study; realism is only as good as the assumptions.">
+              <img src="assets/research/karmats-method.png" alt="KarmaTS method: real series feed causal discovery and edge fitting, experts edit the lagged graph, and the executable process simulates synthetic series with a known graph, with feedback for expert refinement." width="879" height="474" loading="lazy" decoding="async">
+              <span class="proj-zoom">Problem · method · results</span>
+            </a>
+            <div class="proj-body">
+              <div class="proj-meta"><span class="proj-part">Part II · Signal</span><span class="chip">ML4H 2025</span></div>
+              <h4>KarmaTS</h4>
+              <p class="proj-headline">No ground truth for causal claims&nbsp;— <span class="hl">so we built one</span></p>
+              <p class="proj-summary">Causal claims on real data have no ground truth: known-truth benchmarks use random graphs, and real recordings hide the mechanism. KarmaTS makes a discrete-time causal process executable: starting from a real recording, an algorithm proposes the structure, an expert can edit it, and the result can be run forward, intervened on or shifted. Six discovery algorithms were graded against template graphs with a known answer; expert-elicited graphs and a user study are still to come.</p>
+              <ul class="proj-stats"><li>6 discovery algorithms graded on F1 and SID</li><li>Varies series length, lag, density and hidden variables</li><li>Its known-truth logic carries into <span class="nowrap">ICare-DT's</span> counterfactual benchmark</li></ul>
+              <div class="proj-links"><a href="https://proceedings.mlr.press/v297/li26b.html">PMLR</a><a href="https://arxiv.org/abs/2511.11357">arXiv</a><a href="https://github.com/SCAI-Lab/KarmaTS">Code</a><a href="https://github.com/SCAI-Lab/KarmaTS-HCI">Interface code</a></div>
+            </div>
+          </article>
+          </div>
+        </div>
+        <div class="proj-group p3">
+          <div class="proj-group-head"><h3>Part III · Action</h3><p>Effects and experiments, graded against known truth</p></div>
+          <div class="projects">
+          <article class="proj p3" id="proj-icaredt">
+            <a class="proj-fig" href="assets/research/icaredt-panel.png" data-lightbox data-caption="ICare-DT: problem, method and main results (from my PhD defense, September 2026)" data-w="2712" data-h="1214" data-alt="Problem: only one future is recorded, never the untreated one; the average effect is not this patient's effect; and refitting on a few hours of one patient drifts toward harm. Method: a transformer reads the patient history and outputs competing risks over 6 to 48 hours, trajectory forecasts, treatment effects and a personal safety check; the same history is queried under do(A=1) and do(A=0) and the effect is graded against a known value, and the model is fitted on eICU and tested on a second hospital system, MIMIC. Results: treatment-effect error against known truth, on a log scale, is 0.008 for ICare-DT, 0.155 for naive association, 0.854 for RMSN and 0.929 for a causal transformer; in the personalisation check, 48 clinical-state tests show 6 helped, 7 harmed and 33 crossing zero, and 16 onset cells show 3 helped. Limitation: semi-synthetic, because the counterfactual arm is constructed; real-world validity rests on unconfoundedness.">
+              <img src="assets/research/icaredt-method.png" alt="ICare-DT method: a transformer reads the patient history and outputs competing risks, trajectory forecasts, treatment effects and a personal safety check; the same history is queried under do(A=1) and do(A=0) and graded against a known effect on semi-synthetic eICU data; the model is fitted on eICU and tested for transfer on MIMIC." width="894" height="852" loading="lazy" decoding="async">
+              <span class="proj-zoom">Problem · method · results</span>
+            </a>
+            <div class="proj-body">
+              <div class="proj-meta"><span class="proj-part">Part III · Action</span><span class="chip">npj AI · submitted</span></div>
+              <h4>ICare-DT</h4>
+              <p class="proj-headline">What would an action&nbsp;do? <span class="hl">Effects graded, personal updates checked</span></p>
+              <p class="proj-summary">Only one future is recorded, an average effect is not one patient's, and refitting on a few hours of one patient risks harmful drift. ICare-DT learns one representation of an ICU patient's history, with separately testable heads for risk, trajectory, treatment effect and gated personal updates. On semi-synthetic known truth it cut effect error over tenfold versus naive association; a personal update failed its prespecified check and was refused.</p>
+              <ul class="proj-stats"><li>Treatment-effect error 0.008 vs 0.155 naive</li><li>Error 0.854 for RMSN, 0.929 for causal transformer</li><li>Gate vetoed update: <span class="nowrap">0 / 48</span> subgroup tests passed</li></ul>
+            </div>
+          </article>
+          <article class="proj p3" id="proj-biobo">
+            <a class="proj-fig" href="assets/research/biobo-panel.png" data-lightbox data-caption="BioBO: problem, method and main results (from my PhD defense, September 2026)" data-w="2712" data-h="1004" data-alt="Problem: about 10,000 candidate genes, each perturbed one at a time with a cytokine readout, against a budget of about 100 experiments, labelled under 1% of the genome; how much should prior biology decide, and how should several data modalities be combined? Method: a loop of biology prior, surrogate, acquisition and experiment, in which the surrogate fuses multimodal gene embeddings and the biology-informed acquisition prior decays as evidence accumulates. Results: cumulative top-k recall with fused embeddings is 0.109 for BioBO, 0.100 for standard Bayesian optimisation and 0.050 for random on IFN-γ, and 0.178, 0.174 and 0.049 on IL-2; bars of labelling effort saved read 4–40% for modality fusion and 25–40% for the biology prior; with a wrong prior the score is 0.091 against 0.098 with the correct one, close to plain Bayesian optimisation at 0.093. Limitation: the no-harm guarantee is asymptotic, so small budgets rely on experiments; a laboratory setting, not a bedside module.">
+              <img src="assets/research/biobo-method.png" alt="BioBO method: a loop of biology prior, surrogate, acquisition and experiment, in which the surrogate fuses multimodal gene embeddings and a biology-informed acquisition prior decays as evidence accumulates." width="921" height="836" loading="lazy" decoding="async">
+              <span class="proj-zoom">Problem · method · results</span>
+            </a>
+            <div class="proj-body">
+              <div class="proj-meta"><span class="proj-part">Part III · Action</span><span class="chip">ICLR 2026</span></div>
+              <h4>BioBO</h4>
+              <p class="proj-headline">Vast search space, tiny budget&nbsp;— <span class="hl">prior biology must guide without deciding</span></p>
+              <p class="proj-summary">A lab can afford only a few hundred single-gene experiments, under 5% of some 10,000 candidate genes, so prior biology must guide the search without deciding it. BioBO is a Bayesian optimisation loop whose surrogate fuses several data modalities and whose acquisition uses a biology-informed prior that fades as real data arrive. On GeneDisco CRISPR screens it finds the best genes sooner than standard Bayesian optimisation; a deliberately wrong prior falls back to standard performance.</p>
+              <ul class="proj-stats"><li>4–40% labelling effort saved by modality fusion</li><li>Biology prior improves the search in 23 of 24 settings</li><li>Wrong prior: 0.091 vs 0.093 for standard BO (IFN-γ)</li></ul>
+              <div class="proj-links"><a href="https://iclr.cc/virtual/2026/poster/10010875">ICLR</a><a href="https://arxiv.org/abs/2509.19988">arXiv</a></div>
+            </div>
+          </article>
+          </div>
+        </div>
+      </div>
+
+      <figure class="thesis-quote">
+        <blockquote><p>Medicine will not be improved by models that take the decision away from the clinician. It will be improved by models a clinician can work with, and nobody can work with a model they cannot question.</p></blockquote>
+        <figcaption>— from my doctoral thesis, <cite>Towards Explainable Digital Twins for Clinical Decision Support across Spinal Cord Injury and Intensive Care</cite> (ETH Zürich, 2026)</figcaption>
+      </figure>
+
+      <section class="oxford" aria-labelledby="ox-title">
+        <div>
+          <span class="eyebrow"><svg width="13" height="13" viewBox="0 0 15 15" fill="none" aria-hidden="true"><circle cx="3.2" cy="3.2" r="2.1" fill="currentColor"/><circle cx="11.8" cy="6" r="2.1" fill="currentColor"/><circle cx="5.4" cy="11.8" r="2.1" fill="currentColor"/><path d="M5.1 3.9 9.9 5.4M3.8 5.2 4.9 9.9M10.6 7.6 7 10.6" stroke="currentColor" stroke-width="1.1"/></svg>Now at Oxford</span>
+          <h3 id="ox-title">Simulation-based pre-training for robust clinical prediction</h3>
+          <p>I have joined Prof. Christopher Yau's group in the Nuffield Department of Women's &amp; Reproductive Health and the Big Data Institute, on an <span class="nowrap">MRC–NIHR</span> funded project developing a simulation-based pre-training framework for robust, trustworthy clinical prediction models, with exemplar studies in ovarian cancer prognosis, COVID-19 outcomes and childhood mental health. I bring two threads of my PhD to it — causal simulation in the spirit of KarmaTS, and BioBO's principle of injecting domain knowledge as a regularising prior — and approach it in three steps:</p>
+        </div>
+        <ol class="ox-flow">
+          <li><b>Simulate</b>Challenging scenarios and constraints not seen in the historical data, such as data drift and algorithmic fairness.</li>
+          <li><b>Pre-train</b>The model learns from simulated data, with domain knowledge as an informed prior.</li>
+          <li><b>Fine-tune</b>Real clinical data adapts the model while the prior regularises against biased records.</li>
+        </ol>
+        <ul class="ox-outcomes"><li>Resilience to data drift and distribution shift</li><li>Fairness across patient subgroups</li><li>Trustworthy, explainable predictions</li></ul>
+      </section>
     </section>
   </div>
 
@@ -629,47 +1400,47 @@ footer.site {
         <h3>Published &amp; accepted</h3>
         <ul class="pubs">
           <li class="pub">
-            <span class="pub-title">GARLIC: Graph Attention-based Relational Learning of Multivariate Time Series in Intensive Care</span>
+            <a class="pub-title" href="https://iclr.cc/virtual/2026/poster/10011543">GARLIC: Graph Attention-based Relational Learning of Multivariate Time Series in Intensive Care</a>
             <span class="chip">ICLR 2026</span>
             <span class="pub-authors"><b>Y. Li</b>*, R. Wang*, M. Günther, D. Paez-Granados</span>
           </li>
           <li class="pub">
-            <span class="pub-title">BioBO: Biology-Informed Bayesian Optimization for Perturbation Design</span>
+            <a class="pub-title" href="https://iclr.cc/virtual/2026/poster/10010875">BioBO: Biology-Informed Bayesian Optimization for Perturbation Design</a>
             <span class="chip">ICLR 2026</span>
             <span class="pub-authors"><b>Y. Li</b>*, T. Cui*, T. Mansi, M. Prakash, R. Liao</span>
           </li>
           <li class="pub">
-            <span class="pub-title">The ASIA Data Science Challenge — Predicting Functional and Neurological Recovery from Acute ISNCSCI Scores</span>
+            <a class="pub-title" href="https://pubmed.ncbi.nlm.nih.gov/42583186/">The ASIA Data Science Challenge — Predicting Functional and Neurological Recovery from Acute ISNCSCI Scores</a>
             <span class="chip">TSCIR 2026</span>
             <span class="pub-authors">J. Villines*, R. Stirnimann*, L.-P. Lukas, O. Taran, M. Tuci, <b>Y. Li</b>, C. R. Jutzeler, J. L. K. Kramer, F. Geisler, D. Bourbeau, R. J. Cotton&#8224;, S. C. Brüningk&#8224;, and the ASIA Engineering and Data Science Committee</span>
           </li>
           <li class="pub">
-            <span class="pub-title">KarmaTS: A Universal Simulation Platform for Multivariate Time Series with Functional Causal Dynamics</span>
+            <a class="pub-title" href="https://proceedings.mlr.press/v297/li26b.html">KarmaTS: A Universal Simulation Platform for Multivariate Time Series with Functional Causal Dynamics</a>
             <span class="chip">ML4H 2025</span>
             <span class="pub-authors"><b>Y. Li</b>*, H. Li*, D. Paez-Granados</span>
           </li>
           <li class="pub">
-            <span class="pub-title">Automated Prediction of Item-Level ARAT Scores from Wearable Sensors</span>
+            <a class="pub-title" href="https://pubmed.ncbi.nlm.nih.gov/40644012/">Automated Prediction of Item-Level ARAT Scores from Wearable Sensors</a>
             <span class="chip">ICORR 2025</span>
             <span class="pub-authors">T. Weikert, <b>Y. Li</b>, D. Paez-Granados, C. Awai Easthope</span>
           </li>
           <li class="pub">
-            <span class="pub-title">Mixed-Variable Graphical Modelling Towards Risk Prediction of Hospital-Acquired Pressure Injury in Spinal Cord Injury Individuals</span>
+            <a class="pub-title" href="https://www.nature.com/articles/s41598-024-75691-9">Mixed-Variable Graphical Modelling Towards Risk Prediction of Hospital-Acquired Pressure Injury in Spinal Cord Injury Individuals</a>
             <span class="chip">Scientific Reports 2024</span>
             <span class="pub-authors"><b>Y. Li</b>, A. Scheel-Sailer, R. Riener, D. Paez-Granados</span>
           </li>
           <li class="pub">
-            <span class="pub-title">Robust Feature Selection for Continuous BP Estimation in Multiple Populations: Towards Cuffless Ambulatory BP Monitoring</span>
+            <a class="pub-title" href="https://pubmed.ncbi.nlm.nih.gov/38857137/">Robust Feature Selection for Continuous BP Estimation in Multiple Populations: Towards Cuffless Ambulatory BP Monitoring</a>
             <span class="chip">IEEE JBHI 2024</span>
             <span class="pub-authors">A. Cisnal, <b>Y. Li</b>, B. Fuchs, M. Ejtehadi, R. Riener, D. Paez-Granados</span>
           </li>
           <li class="pub">
-            <span class="pub-title">Causal Domain Adaptation via Perturbed DAG Reconstruction</span>
+            <a class="pub-title" href="https://arxiv.org/abs/2208.01373">Causal Domain Adaptation via Perturbed DAG Reconstruction</a>
             <span class="chip">arXiv 2022</span>
             <span class="pub-authors"><b>Y. Li</b>, T. Hatt, I. Bica, M. van der Schaar (MSc thesis, ETH Zürich)</span>
           </li>
           <li class="pub">
-            <span class="pub-title">A Closer Look at the Training Strategy for Modern Meta-Learning</span>
+            <a class="pub-title" href="https://proceedings.neurips.cc/paper/2020/hash/0415740eaa4d9decbc8da001d3fd805f-Abstract.html">A Closer Look at the Training Strategy for Modern Meta-Learning</a>
             <span class="chip">NeurIPS 2020</span>
             <span class="pub-authors">J. Chen, X. Wu, <b>Y. Li</b>, Q. Li, L. Zhan, F. Chung</span>
           </li>
@@ -874,5 +1645,34 @@ footer.site {
   </div>
 </footer>
 
+
+<dialog class="lightbox" id="lightbox" aria-labelledby="lb-cap">
+  <form method="dialog"><button class="lb-close" aria-label="Close figure">×</button></form>
+  <figure><figcaption id="lb-cap"></figcaption></figure>
+</dialog>
+<script>
+(() => {
+  const dlg = document.getElementById('lightbox');
+  if (!dlg || typeof dlg.showModal !== 'function') return;   // no <dialog>: links just open the image
+  const cap = dlg.querySelector('figcaption');
+  const img = document.createElement('img');                 // created here so the markup never holds an <img> without src
+  img.decoding = 'async';
+  dlg.querySelector('figure').prepend(img);
+  document.querySelectorAll('a[data-lightbox]').forEach((a) => a.setAttribute('aria-haspopup', 'dialog'));
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[data-lightbox]');
+    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    img.width = +a.dataset.w || 2712; img.height = +a.dataset.h || 1132;   // reserve the panel's shape before it loads
+    img.src = a.getAttribute('href'); img.alt = a.dataset.alt || ''; cap.textContent = a.dataset.caption || '';
+    dlg.showModal();
+  });
+  // Close on a click that starts and ends on the backdrop (not a text selection dragged out of the dialog).
+  let downOnBackdrop = false;
+  dlg.addEventListener('pointerdown', (e) => { downOnBackdrop = e.target === dlg; });
+  dlg.addEventListener('click', (e) => { if (e.target === dlg && downOnBackdrop) dlg.close(); });
+  dlg.addEventListener('close', () => img.removeAttribute('src'));
+})();
+</script>
 </body>
 </html>
